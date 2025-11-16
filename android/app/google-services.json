@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "215063260675",
+    "project_id": "meditime-b4321",
+    "storage_bucket": "meditime-b4321.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215063260675:android:3f5ae5b947d7f5fc406836",
+        "android_client_info": {
+          "package_name": "com.example.meditime"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHXH7r78cDDpji0xKwa5nkz02JV30MjB4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
