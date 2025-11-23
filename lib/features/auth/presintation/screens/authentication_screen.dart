@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/repo/user_repo.dart';
+import '../../../../core/services/user_service.dart';
 import '../../business_logic/auth_switch_cubit/auth_switch_cubit.dart';
 import '../../business_logic/login_cubit/login_cubit.dart';
 import '../../business_logic/register_cubit/register_cubit.dart';
@@ -15,8 +17,8 @@ class AuthenticationScreen extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => LoginCubit()),
-          BlocProvider(create: (context) => RegisterCubit()),
+          BlocProvider(create: (context) => LoginCubit(userRepo: UserRepo(UserService()))),
+          BlocProvider(create: (context) => RegisterCubit(userRepo: UserRepo(UserService()))),
           BlocProvider(create: (context) => AuthSwitchCubit()),
         ],
   child: Scaffold(

@@ -176,6 +176,8 @@ class SignupScreenBody extends StatelessWidget {
                                 ).registerUser(
                                   email: _emailController.text,
                                   password: _passwordController.text,
+                                  name:_nameController.text ,
+                                  phoneNumber: _mobileController.text,
                                 );
                               }
                             },

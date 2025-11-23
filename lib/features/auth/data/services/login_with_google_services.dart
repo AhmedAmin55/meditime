@@ -19,8 +19,7 @@ class GoogleAuth {
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
-      final userCredential = await auth.signInWithCredential(credential);
-      print('✅ تسجيل الدخول تم بنجاح للمستخدم: ${userCredential.user?.email}');
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (ctx) => Navbar()),

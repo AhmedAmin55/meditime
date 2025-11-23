@@ -48,7 +48,7 @@ class AppTexts {
 
   //homeScreen
   static const String todayIsSchedule = "Today's Schedule :";
-  static const String goodMorning = "Good Morning, Jone";
+  static const String goodMorning = "Good Morning";
   static const String hereIsYourMedicineScheduleForToday =
       "Here's your medicine schedule for today";
 

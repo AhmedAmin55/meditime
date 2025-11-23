@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:meditime/core/repo/user_repo.dart';
 import 'package:meditime/features/home/presintation/widgets/user_card.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
 import '../../../../core/constants/app_textstyle.dart';
+import '../../../../core/services/user_service.dart';
 import '../../../../core/widgets/primary_appbar.dart';
 
 class HomeScreenHeader extends StatelessWidget {
@@ -15,7 +17,7 @@ class HomeScreenHeader extends StatelessWidget {
     return Column(
       children: [
         PrimaryAppbar(
-          title: AppTexts.goodMorning,
+          title: "${AppTexts.goodMorning}, ",
           titleStyle: AppTextsStyle.poppinsRegular25(context),
           subtitle: AppTexts.hereIsYourMedicineScheduleForToday,
           subtitleStyle: AppTextsStyle.poppinsBold15(context),

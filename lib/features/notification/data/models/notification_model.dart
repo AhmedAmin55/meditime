@@ -2,7 +2,7 @@ class AppNotification {
   final String title;
   final String subtitle;
   final DateTime time;
-  final NotificationType type; // now, missed, taken
+  final NotificationType type;
 
   AppNotification({required this.title, required this.subtitle, required this.time, required this.type});
 }

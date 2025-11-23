@@ -4,44 +4,50 @@ import 'package:flutter/cupertino.dart';
 import 'package:meditime/core/constants/app_texts.dart';
 import 'package:meta/meta.dart';
 
+import '../../../../core/models/user_model.dart';
+import '../../../../core/repo/user_repo.dart';
 import '../../data/services/auth_user.dart';
 
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit() : super(LoginInitial());
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final UserRepo userRepo;
 
-  // Future<void> login(
-  //   BuildContext context,
-  //   String email,
-  //   String password,
-  // ) async {
-  //   emit(LoginLoading());
-  //   try {
-  //     await AuthUser().loginWithEmail(
-  //       context,
-  //       email: email,
-  //       password: password,
-  //     );
-  //     emit(LoginSuccess());
-  //   } catch (e) {
-  //     emit(LoginFailure(errorMessage: "Something went wrong"));
-  //   }
-  // }
-Future<void> loginWithEmail({required String email, required String password, })async{
-emit(LoginLoading());
-  try{
-    await _auth.signInWithEmailAndPassword(email: email, password: password);
-  emit(LoginSuccess());
-  }on FirebaseAuthException catch (e) {
-    if ( e.code == "invalid-credential") {
-     emit(LoginFailure(errorMessage: AppTexts.emailOrPasswordIncorrect));
-    }else if(e.code == "network-request-failed" ){
-      emit(LoginFailure(errorMessage: AppTexts.problemWithInternetConnection));
+  LoginCubit({required this.userRepo}) : super(LoginInitial());
+
+  Future<void> loginWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    emit(LoginLoading());
+    try {
+      // تسجيل الدخول في Firebase Auth
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final uid = userCredential.user!.uid;
+
+      // جلب بيانات المستخدم من Firestore
+      UserModel? user = await userRepo.getUserData(uid);
+      if (user == null) {
+        emit(LoginFailure(errorMessage: "User data not found in Firestore"));
+        return;
+      }
+
+      emit(LoginSuccess(user: user));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "invalid-credential") {
+        emit(LoginFailure(errorMessage: AppTexts.emailOrPasswordIncorrect));
+      } else if (e.code == "network-request-failed") {
+        emit(LoginFailure(errorMessage: AppTexts.problemWithInternetConnection));
+      } else {
+        emit(LoginFailure(errorMessage: e.message ?? AppTexts.someThingWentWrong));
+      }
+    } catch (e) {
+      emit(LoginFailure(errorMessage: AppTexts.someThingWentWrong));
     }
-  }catch(e){
-    emit(LoginFailure(errorMessage: AppTexts.someThingWentWrong));
   }
-}
 }
