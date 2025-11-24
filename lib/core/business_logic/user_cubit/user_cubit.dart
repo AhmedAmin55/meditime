@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:bloc/bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import '../../models/user_model.dart';
 import '../../repo/user_repo.dart';
@@ -7,10 +9,11 @@ part 'user_state.dart';
 
 class UserCubit extends Cubit<UserState> {
   final UserRepo userRepo;
+
   UserCubit(this.userRepo) : super(UserInitial());
 
-  // جلب بيانات المستخدم من Firestore
-  Future<void> fetchUser(String uid) async {
+  // جلب بيانات المستخدم
+  Future<void> fetchUser({required String uid}) async {
     emit(UserLoading());
     try {
       final user = await userRepo.getUserData(uid);
@@ -24,15 +27,20 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-  // تحديث الاسم
   Future<void> updateName(String uid, String newName) async {
     await userRepo.updateName(uid, newName);
-    await fetchUser(uid); // refresh بعد التحديث
+    await fetchUser(uid: uid); // refresh
   }
 
-  // تحديث الصورة
-  Future<void> updatePhoto(String uid, String url) async {
-    await userRepo.updatePhoto(uid, url);
-    await fetchUser(uid); // refresh بعد التحديث
+  Future<void> updatePhoto(String uid, XFile pickedImage) async {
+    final file = File(pickedImage.path);
+
+    await userRepo.updatePhoto(uid, file);
+
+    await fetchUser(uid: uid);
+  }
+
+  void resetUser(){
+    emit(UserInitial());
   }
 }

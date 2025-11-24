@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditime/features/add_medicine/business_logic/add_medicine_cubit/add_medicine_cubit.dart';
 
 import '../../../../core/business_logic/nav_cubit/nav_cubit.dart';
+import '../../../../core/business_logic/user_cubit/user_cubit.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
@@ -44,53 +45,43 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
-
+    // TODO: implement initStatess
     super.initState();
     _checkUser();
   }
 
   Future<void> _checkUser() async {
-    await Future.delayed(const Duration(seconds: 2)); // optional splash delay
+    await Future.delayed(const Duration(seconds: 2));
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      // not signed in → go to SignIn
-
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const AuthenticationScreen()),
       );
     } else {
-      // signed in → go to Home
+      context.read<UserCubit>().fetchUser(uid: user.uid);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) =>
-            Navbar()),
+        MaterialPageRoute(builder: (_) => Navbar()),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: AppColors.splashScreenColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Row(),
-          Image.asset(
-              AppImages.splashScreenLogo, width: width * 0.3),
+          Image.asset(AppImages.splashScreenLogo, width: width * 0.3),
           SizedBox(height: 10),
           Text(
-            AppTexts.appName, style: AppTextsStyle.merriweatherBold30(context),
+            AppTexts.appName,
+            style: AppTextsStyle.merriweatherBold30(context),
           ),
           // AnimatedTextKit(
           //   repeatForever: true,

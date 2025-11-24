@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../models/user_model.dart';
 
@@ -15,12 +18,25 @@ class UserService {
     return UserModel.fromMap(doc.data()!);
   }
 
-  Future<void> updateProfilePhoto(String uid, String url) async {
+  Future<void> updateProfilePhoto(String uid, File file) async {
+    // 1- حدد مكان الصورة داخل Storage
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child("users")
+        .child(uid)
+        .child("profile.jpg");
+
+    // 2- ارفع الصورة
+    await storageRef.putFile(file);
+
+    // 3- هات رابط الصورة
+    final downloadUrl = await storageRef.getDownloadURL();
+
+    // 4- خزنه داخل Firestore
     await _firestore.collection("users").doc(uid).update({
-      'profile_photo': url,
+      'profile_photo': downloadUrl,
     });
   }
-
   // 🔹 تحديث الاسم فقط
   Future<void> updateName(String uid, String newName) async {
     await _firestore.collection("users").doc(uid).update({

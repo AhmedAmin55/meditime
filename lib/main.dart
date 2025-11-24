@@ -2,6 +2,9 @@ import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meditime/core/business_logic/user_cubit/user_cubit.dart';
+import 'package:meditime/core/repo/user_repo.dart';
+import 'package:meditime/core/services/user_service.dart';
 import 'core/business_logic/nav_cubit/nav_cubit.dart';
 import 'core/constants/app_texts.dart';
 import 'features/add_medicine/business_logic/add_medicine_cubit/add_medicine_cubit.dart';
@@ -24,7 +27,8 @@ class Meditime extends StatelessWidget {
         BlocProvider(create: (context) => DaysCubit()),
         BlocProvider(create: (context) => SearchCubit()),
         BlocProvider(create: (context) => NavCubit()),
-        BlocProvider(create: (context) => AddMedicineCubit())
+        BlocProvider(create: (context) => AddMedicineCubit()),
+        BlocProvider(create: (context) => UserCubit(UserRepo(UserService())))
       ],
       child: MaterialApp(
         locale: DevicePreview.locale(context),

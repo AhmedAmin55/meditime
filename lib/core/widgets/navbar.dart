@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditime/core/constants/app_images.dart';
@@ -12,6 +13,7 @@ import '../../features/home/presintation/screens/home_screen.dart';
 import '../../features/notification/presintation/screens/notifications_screen.dart';
 import '../../features/profile/presintation/screens/profile_screen.dart';
 import '../business_logic/nav_cubit/nav_cubit.dart';
+import '../business_logic/user_cubit/user_cubit.dart';
 import '../constants/app_colors.dart';
 
 class Navbar extends StatelessWidget {
@@ -86,6 +88,8 @@ class Navbar extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         BlocProvider.of<NavCubit>(context).changeScreen(index: index);
+        if(index==4){
+        }
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),

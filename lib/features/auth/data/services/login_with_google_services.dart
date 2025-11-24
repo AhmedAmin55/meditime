@@ -19,7 +19,8 @@ class GoogleAuth {
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
       );
-
+      final UserCredential userCredential =
+      await auth.signInWithCredential(credential);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (ctx) => Navbar()),

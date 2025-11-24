@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import '../../../../core/business_logic/user_cubit/user_cubit.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
@@ -56,6 +57,7 @@ class _LoginscreenbodyState extends State<Loginscreenbody> {
           isLoading = true;
         } else if (state is LoginSuccess) {
           isLoading = false;
+          context.read<UserCubit>().fetchUser(uid: state.user.uid);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (ctx) => Navbar()),

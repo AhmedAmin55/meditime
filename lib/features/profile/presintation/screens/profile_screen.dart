@@ -1,12 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditime/core/constants/app_colors.dart';
 import 'package:meditime/core/constants/app_images.dart';
 import 'package:meditime/core/constants/app_texts.dart';
 import 'package:meditime/core/constants/app_textstyle.dart';
+import 'package:meditime/core/utils/app_validators.dart';
+import 'package:meditime/core/widgets/custom_textformfield.dart';
+import 'package:meditime/features/profile/presintation/widgets/change_profile_name_dialog.dart';
 import 'package:meditime/features/profile/presintation/widgets/container_do_some_thing.dart';
 import 'package:meditime/features/profile/presintation/widgets/user_image.dart';
 
+import '../../../../core/business_logic/nav_cubit/nav_cubit.dart';
+import '../../../../core/business_logic/user_cubit/user_cubit.dart';
+import '../../../../core/widgets/primary_button.dart';
 import '../../../auth/presintation/screens/authentication_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -16,6 +23,21 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
+  late TextEditingController _nameController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _nameController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _nameController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +51,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(height: 24),
             UserImage(),
             SizedBox(height: 12),
-            Text(
-              'ahmed amin basha',
-              style: AppTextsStyle.merriweatherBold30(context).copyWith(
-                color: AppColors.splashScreenColor.withOpacity(0.9),
-                fontSize: 16,
-              ),
+            BlocBuilder<UserCubit, UserState>(
+              builder: (context, state) {
+                print(state);
+                if (state is UserLoaded) {
+                  print("=====================================> ${state}");
+                  return Text(
+                    state.user.name,
+                    style: AppTextsStyle.merriweatherBold30(context).copyWith(
+                      color: AppColors.splashScreenColor.withOpacity(0.9),
+                      fontSize: 16,
+                    ),
+                  );
+                } else {
+                  return SizedBox();
+                }
+              },
             ),
             SizedBox(height: 4),
             Text(
-              'ahmed amin @gmail.com',
+              (BlocProvider.of<UserCubit>(context).state as UserLoaded)
+                  .user
+                  .email,
               style: AppTextsStyle.merriweatherRegular20(
                 context,
               ).copyWith(color: AppColors.splashScreenColor.withOpacity(0.77)),
@@ -54,18 +88,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       ContainerDoSomeThing(
                         title: AppTexts.changeProfileName,
-                        onTap: () {},
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return ChangeProfileNameDialog(
+                                nameController: _nameController,
+                              );
+                            },
+                          );
+                        },
                       ),
                       SizedBox(height: 10),
                       ContainerDoSomeThing(
                         title: AppTexts.resetPassword,
-                        onTap: () {},
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return ChangeProfileNameDialog(
+                                nameController: _nameController,
+                              );
+                            },
+                          );
+                        },
                       ),
                       SizedBox(height: 10),
                       ContainerDoSomeThing(
                         title: AppTexts.signOut,
                         onTap: () async {
                           await auth.signOut();
+                          context.read<UserCubit>().resetUser();
+                          context.read<NavCubit>().changeScreen(index: 0);
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(

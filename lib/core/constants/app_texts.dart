@@ -94,4 +94,6 @@ class AppTexts {
   static const String changeProfileName = "Change profile name";
   static const String resetPassword = "Reset Password";
   static const String signOut = "Sign Out →";
+  static const String camera = "Camera";
+  static const String gallery = "Gallery";
 }

@@ -36,4 +36,5 @@ static const String nofiTakenIcon="assets/images/noti_taken_icon.png";
 static const String rateIcon="assets/images/rate_icon.png";
 static const String deleteIcon="assets/images/delete_icon.png";
 static const String personIcon="assets/images/person_icon.png";
+static const String editNameIcon="assets/images/edit_name_icon.png";
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../models/user_model.dart';
 import '../services/user_service.dart';
 
@@ -10,7 +12,7 @@ class UserRepo {
 
   Future<UserModel?> getUserData(String uid) => service.getUser(uid);
 
-  Future<void> updatePhoto(String uid, String url) =>
+  Future<void> updatePhoto(String uid, File url) =>
       service.updateProfilePhoto(uid, url);
   Future<void> updateName(String uid, String newName) =>
       service.updateName(uid, newName);

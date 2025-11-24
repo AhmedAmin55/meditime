@@ -16,3 +16,8 @@ final class UserFailure extends UserState {
   final String errorMessage;
   UserFailure({required this.errorMessage});
 }
+
+final class UserImagePicked extends UserState {
+  final String image;
+  UserImagePicked({required this.image});
+}

@@ -23,10 +23,8 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(RegisterLoading());
     try {
       // 1️⃣ تسجيل المستخدم في Firebase Auth
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       final uid = userCredential.user!.uid;
 
@@ -34,7 +32,8 @@ class RegisterCubit extends Cubit<RegisterState> {
       final newUser = UserModel(
         uid: uid,
         name: name,
-        age: 0, // سيُضاف لاحقًا داخل التطبيق
+        age: 0,
+        // سيُضاف لاحقًا داخل التطبيق
         email: email,
         phoneNumber: phoneNumber,
       );
@@ -49,9 +48,15 @@ class RegisterCubit extends Cubit<RegisterState> {
       } else if (e.code == "weak-password") {
         emit(RegisterFailure(errorMessage: AppTexts.weakPassword));
       } else if (e.code == "network-request-failed") {
-        emit(RegisterFailure(errorMessage: AppTexts.problemWithInternetConnection));
+        emit(
+          RegisterFailure(errorMessage: AppTexts.problemWithInternetConnection),
+        );
       } else {
-        emit(RegisterFailure(errorMessage: e.message ?? AppTexts.someThingWentWrong));
+        emit(
+          RegisterFailure(
+            errorMessage: e.message ?? AppTexts.someThingWentWrong,
+          ),
+        );
       }
     } catch (e) {
       emit(RegisterFailure(errorMessage: AppTexts.someThingWentWrong));
