@@ -12,7 +12,20 @@
           "package_name": "com.example.meditime"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "215063260675-67sngiter2okbl4geh0aoegbc34q3lmo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meditime",
+            "certificate_hash": "043f75f98970f72074dc90f19e7daef1b33b0a6c"
+          }
+        },
+        {
+          "client_id": "215063260675-dkt1s0qbik59ubnfpji88mvfpct2jigd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBHXH7r78cDDpji0xKwa5nkz02JV30MjB4"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215063260675-dkt1s0qbik59ubnfpji88mvfpct2jigd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "215063260675-b8vou5gu3m4q39p59g67qtch1ps5ffjr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.meditime"
+              }
+            }
+          ]
         }
       }
     }

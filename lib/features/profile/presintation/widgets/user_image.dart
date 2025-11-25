@@ -17,6 +17,7 @@ class UserImage extends StatelessWidget {
   final GestureTapCallback? onTap;
   XFile? pickedImage;
   final ImagePicker imagePicker = ImagePicker();
+
   getImage({required ImageSource source}) async {
     pickedImage = await imagePicker.pickImage(source: source);
   }
@@ -33,18 +34,18 @@ class UserImage extends StatelessWidget {
             builder: (context, state) {
               if (state is UserLoaded) {
                 if (state.user.profilePhoto == null) {
-                return  CircleAvatar(
+                  return CircleAvatar(
                     radius: width * 0.16,
                     backgroundColor: AppColors.splashScreenColor,
                     child: Image.asset(AppImages.personIcon, width: 80),
                   );
                 } else if (state.user.profilePhoto != null) {
-                return  CircleAvatar(
+                  return CircleAvatar(
                     radius: width * 0.16,
                     backgroundColor: AppColors.splashScreenColor,
                     child: Image.network(state.user.profilePhoto.toString()),
                   );
-                }else{
+                } else {
                   return SizedBox();
                 }
               } else {
@@ -61,25 +62,26 @@ class UserImage extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 builder: (ctx) => CustomShowBottomSheet(
-                  onTapForCamera: () {
-                    getImage(source: ImageSource.camera);
+                  onTapForCamera: () async {
+                    await getImage(source: ImageSource.camera);
                     if (pickedImage != null) {
                       context.read<UserCubit>().updatePhoto(
                         FirebaseAuth.instance.currentUser!.uid,
                         pickedImage!,
                       );
-
                     }
                     Navigator.pop(context);
                   },
                   onTapForGallery: () async {
                     await getImage(source: ImageSource.gallery);
+                    print(" ======================== Picked image : ${pickedImage!.path}");
+
                     if (pickedImage != null) {
                       context.read<UserCubit>().updatePhoto(
                         FirebaseAuth.instance.currentUser!.uid,
                         pickedImage!,
                       );
-                      print("Picked image path: ${pickedImage!.path}");
+                      print("============Picked image path: ${pickedImage!.path}");
                     }
                     Navigator.pop(context);
                   },

@@ -17,34 +17,36 @@ class UserService {
     if (!doc.exists) return null;
     return UserModel.fromMap(doc.data()!);
   }
-
   Future<void> updateProfilePhoto(String uid, File file) async {
-    // 1- حدد مكان الصورة داخل Storage
-    final storageRef = FirebaseStorage.instance
-        .ref()
-        .child("users")
-        .child(uid)
-        .child("profile.jpg");
+    try {
+      print("Uploading file: ${file.path}");
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child("profile_images")
+          .child("${uid}_${DateTime.now().millisecondsSinceEpoch}.jpg");
 
-    // 2- ارفع الصورة
-    await storageRef.putFile(file);
+      UploadTask uploadTask = ref.putFile(file);
+      TaskSnapshot snapshot = await uploadTask;
 
-    // 3- هات رابط الصورة
-    final downloadUrl = await storageRef.getDownloadURL();
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      print("Download URL = $downloadUrl");
 
-    // 4- خزنه داخل Firestore
-    await _firestore.collection("users").doc(uid).update({
-      'profile_photo': downloadUrl,
-    });
+      await _firestore.collection("users").doc(uid).update({
+        'profile_photo': downloadUrl,
+      });
+
+      print("Profile photo updated successfully!");
+    } catch (e) {
+      print("🔥 ERROR in updateProfilePhoto: $e");
+      rethrow;
+    }
   }
-  // 🔹 تحديث الاسم فقط
+
   Future<void> updateName(String uid, String newName) async {
-    await _firestore.collection("users").doc(uid).update({
-      'name': newName,
-    });
+    await _firestore.collection("users").doc(uid).update({'name': newName});
   }
+
   Future<void> updateAge(String uid, int newAge) async {
-    await _firestore.collection("users").doc(uid).update({
-      'age': newAge,
-    });
-}}
+    await _firestore.collection("users").doc(uid).update({'age': newAge});
+  }
+}

@@ -119,14 +119,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onTap: () async {
                           await auth.signOut();
                           context.read<UserCubit>().resetUser();
-                          context.read<NavCubit>().changeScreen(index: 0);
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                               builder: (_) => AuthenticationScreen(),
                             ),
                             (route) => false,
+
                           );
+                          context.read<NavCubit>().changeScreen(index: 0);
+
                         },
                       ),
                     ],

@@ -36,7 +36,6 @@ class UserCubit extends Cubit<UserState> {
     final file = File(pickedImage.path);
 
     await userRepo.updatePhoto(uid, file);
-
     await fetchUser(uid: uid);
   }
   Future<void> updateAge(String uid, int newAge) async {

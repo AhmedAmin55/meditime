@@ -1,12 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meditime/features/home/presintation/widgets/no_found_age.dart';
 import '../../../../core/business_logic/user_cubit/user_cubit.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_textstyle.dart';
 import 'medication_status.dart';
+
 class UserCard extends StatelessWidget {
-  const UserCard({super.key});
+ const UserCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,43 +42,40 @@ class UserCard extends StatelessWidget {
                     backgroundImage: AssetImage(AppImages.logo),
                   ),
                   const SizedBox(width: 15),
-                  // ٣. استخدم BlocBuilder هنا
                   BlocBuilder<UserCubit, UserState>(
                     builder: (context, state) {
-                      // في حالة تحميل البيانات بنجاح
                       if (state is UserLoaded) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              state.user.name, // عرض الاسم من الحالة
+                              state.user.name,
                               style: AppTextsStyle.poppinsBold15(
                                 context,
                               ).copyWith(fontSize: 16, color: AppColors.white),
                             ),
                             const SizedBox(height: 5),
                             if (state.user.age != null) ...[
-                              const SizedBox(height: 5),
+                              // const SizedBox(height: 5),
                               Text(
-                                "${state.user.age} years old", // عرض العمر من الحالة
-                                style: AppTextsStyle.poppinsRegular25(
-                                  context,
-                                ).copyWith(fontSize: 14, color: AppColors.ageColor),
+                                "${state.user.age} years old",
+                                style: AppTextsStyle.poppinsRegular25(context)
+                                    .copyWith(
+                                      fontSize: 14,
+                                      color: AppColors.ageColor,
+                                    ),
                               ),
                             ],
-                            // -- نهاية التعديل --
+                            if (state.user.age == null) ...[NoFoundAge()],
                           ],
                         );
                       }
-
-                      // أثناء التحميل أو في أي حالة أخرى، اعرض واجهة فارغة
-                      // هذا يلبي طلبك بعرض مكان فارغ بدلاً من مؤشر التحميل
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 100, // عرض تقديري لاسم المستخدم
-                            height: 16, // ارتفاع تقديري لاسم المستخدم
+                            width: 100,
+                            height: 16,
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(4),
@@ -83,8 +83,8 @@ class UserCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 5),
                           Container(
-                            width: 60, // عرض تقديري للعمر
-                            height: 14, // ارتفاع تقديري للعمر
+                            width: 60,
+                            height: 14,
                             decoration: BoxDecoration(
                               color: AppColors.ageColor.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(4),
@@ -99,7 +99,6 @@ class UserCard extends StatelessWidget {
               Flexible(child: SizedBox(height: height * 0.02)),
               Divider(color: Colors.white.withOpacity(0.1), thickness: 1),
               Flexible(child: SizedBox(height: height * 0.02)),
-              // ... باقي الكود يبقى كما هو ...
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
