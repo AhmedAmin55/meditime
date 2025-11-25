@@ -1,7 +1,7 @@
 class UserModel {
   final String uid;
   final String name;
-  final int age;
+  final int? age;
   final String email;
   final String? profilePhoto;
   final String phoneNumber;
@@ -9,7 +9,7 @@ class UserModel {
   UserModel({
     required this.uid,
     required this.name,
-    required this.age,
+    this.age,
     required this.email,
     required this.phoneNumber,
     this.profilePhoto,

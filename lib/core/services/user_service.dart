@@ -43,4 +43,8 @@ class UserService {
       'name': newName,
     });
   }
-}
+  Future<void> updateAge(String uid, int newAge) async {
+    await _firestore.collection("users").doc(uid).update({
+      'age': newAge,
+    });
+}}

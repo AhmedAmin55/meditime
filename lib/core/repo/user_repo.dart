@@ -16,4 +16,6 @@ class UserRepo {
       service.updateProfilePhoto(uid, url);
   Future<void> updateName(String uid, String newName) =>
       service.updateName(uid, newName);
+  Future<void> updateAge(String uid, int newAge) =>
+      service.updateAge(uid, newAge);
 }

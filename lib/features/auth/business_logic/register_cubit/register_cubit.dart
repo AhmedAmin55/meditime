@@ -32,16 +32,14 @@ class RegisterCubit extends Cubit<RegisterState> {
       final newUser = UserModel(
         uid: uid,
         name: name,
-        age: 0,
-        // سيُضاف لاحقًا داخل التطبيق
         email: email,
         phoneNumber: phoneNumber,
       );
 
       // 3️⃣ إضافة البيانات إلى Firestore عبر الـ Repo
-      await userRepo.registerUser(newUser);
 
-      emit(RegisterSuccess());
+      await userRepo.registerUser(newUser);
+      emit(RegisterSuccess(uid: uid)); // مرر الـ uid هنا
     } on FirebaseAuthException catch (e) {
       if (e.code == "email-already-in-use") {
         emit(RegisterFailure(errorMessage: AppTexts.emailAlreadyExist));

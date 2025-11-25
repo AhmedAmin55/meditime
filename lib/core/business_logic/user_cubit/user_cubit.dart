@@ -39,6 +39,10 @@ class UserCubit extends Cubit<UserState> {
 
     await fetchUser(uid: uid);
   }
+  Future<void> updateAge(String uid, int newAge) async {
+    await userRepo.updateAge(uid, newAge);
+    await fetchUser(uid: uid); // refresh
+  }
 
   void resetUser(){
     emit(UserInitial());
