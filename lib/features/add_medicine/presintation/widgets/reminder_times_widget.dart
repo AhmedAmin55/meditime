@@ -2,46 +2,71 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meditime/core/constants/app_colors.dart';
 
-
 class ReminderTimesWidget extends StatefulWidget {
-  const ReminderTimesWidget({super.key});
+  final List<Map<String, dynamic>> reminderTimes;
+  final Function(List<Map<String, dynamic>>) onTimesChanged;
+
+  const ReminderTimesWidget({
+    super.key,
+    required this.reminderTimes,
+    required this.onTimesChanged,
+  });
 
   @override
   State<ReminderTimesWidget> createState() => _ReminderTimesWidgetState();
 }
 
 class _ReminderTimesWidgetState extends State<ReminderTimesWidget> {
-  List<Map<String, dynamic>> _reminderTimes = [
-    {
-      'hour': '08',
-      'minute': '00',
-      'period': 'AM',
-    },
-  ];
-
   void _addReminderTime() {
     setState(() {
-      _reminderTimes.add({
+      widget.reminderTimes.add({
         'hour': '08',
         'minute': '00',
         'period': 'AM',
       });
     });
+    widget.onTimesChanged(widget.reminderTimes);
   }
 
   void _removeReminderTime(int index) {
-    if (_reminderTimes.length > 1) {
+    if (widget.reminderTimes.length > 1) {
       setState(() {
-        _reminderTimes.removeAt(index);
+        widget.reminderTimes.removeAt(index);
       });
+      widget.onTimesChanged(widget.reminderTimes);
     }
   }
 
   void _togglePeriod(int index) {
     setState(() {
-      _reminderTimes[index]['period'] =
-      _reminderTimes[index]['period'] == 'AM' ? 'PM' : 'AM';
+      widget.reminderTimes[index]['period'] =
+      widget.reminderTimes[index]['period'] == 'AM' ? 'PM' : 'AM';
     });
+    widget.onTimesChanged(widget.reminderTimes);
+  }
+
+  void _updateHour(int index, String value) {
+    if (value.isNotEmpty) {
+      int hour = int.tryParse(value) ?? 8;
+      if (hour > 12) hour = 12;
+      if (hour < 1) hour = 1;
+      setState(() {
+        widget.reminderTimes[index]['hour'] = hour.toString().padLeft(2, '0');
+      });
+      widget.onTimesChanged(widget.reminderTimes);
+    }
+  }
+
+  void _updateMinute(int index, String value) {
+    if (value.isNotEmpty) {
+      int minute = int.tryParse(value) ?? 0;
+      if (minute > 59) minute = 59;
+      if (minute < 0) minute = 0;
+      setState(() {
+        widget.reminderTimes[index]['minute'] = minute.toString().padLeft(2, '0');
+      });
+      widget.onTimesChanged(widget.reminderTimes);
+    }
   }
 
   @override
@@ -51,21 +76,19 @@ class _ReminderTimesWidgetState extends State<ReminderTimesWidget> {
       children: [
         Text(
           "Reminder Times",
-          // style: GoogleFonts.poppins(
-          //   fontSize: 16,
-          //   fontWeight: FontWeight.w500,
-          //   color: Colors.black.withOpacity(0.7),
-          // ),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black.withOpacity(0.7),
+          ),
         ),
         const SizedBox(height: 12),
 
-        // Display reminder times
-        ...List.generate(_reminderTimes.length, (index) {
+        ...List.generate(widget.reminderTimes.length, (index) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 12.0),
             child: Row(
               children: [
-                // Time field container
                 Container(
                   width: 312 - 16 - 84,
                   height: 50,
@@ -82,12 +105,11 @@ class _ReminderTimesWidgetState extends State<ReminderTimesWidget> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Hour input
                         SizedBox(
                           width: 40,
                           child: TextField(
                             controller: TextEditingController(
-                              text: _reminderTimes[index]['hour'],
+                              text: widget.reminderTimes[index]['hour'],
                             ),
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
@@ -95,40 +117,31 @@ class _ReminderTimesWidgetState extends State<ReminderTimesWidget> {
                               FilteringTextInputFormatter.digitsOnly,
                               LengthLimitingTextInputFormatter(2),
                             ],
-                            // style: GoogleFonts.poppins(
-                            //   fontSize: 14,
-                            //   color: Colors.black87,
-                            //   fontWeight: FontWeight.w400,
-                            // ),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w400,
+                            ),
                             decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: '08',
                             ),
-                            onChanged: (value) {
-                              if (value.isNotEmpty) {
-                                int hour = int.tryParse(value) ?? 8;
-                                if (hour > 12) hour = 12;
-                                if (hour < 1) hour = 1;
-                                _reminderTimes[index]['hour'] =
-                                    hour.toString().padLeft(2, '0');
-                              }
-                            },
+                            onChanged: (value) => _updateHour(index, value),
                           ),
                         ),
                         Text(
                           ':',
-                          // style: GoogleFonts.poppins(
-                          //   fontSize: 14,
-                          //   color: Colors.black87,
-                          //   fontWeight: FontWeight.w400,
-                          // ),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                        // Minute input
                         SizedBox(
                           width: 40,
                           child: TextField(
                             controller: TextEditingController(
-                              text: _reminderTimes[index]['minute'],
+                              text: widget.reminderTimes[index]['minute'],
                             ),
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.number,
@@ -136,28 +149,19 @@ class _ReminderTimesWidgetState extends State<ReminderTimesWidget> {
                               FilteringTextInputFormatter.digitsOnly,
                               LengthLimitingTextInputFormatter(2),
                             ],
-                            // style: GoogleFonts.poppins(
-                            //   fontSize: 14,
-                            //   color: Colors.black87,
-                            //   fontWeight: FontWeight.w400,
-                            // ),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w400,
+                            ),
                             decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: '00',
                             ),
-                            onChanged: (value) {
-                              if (value.isNotEmpty) {
-                                int minute = int.tryParse(value) ?? 0;
-                                if (minute > 59) minute = 59;
-                                if (minute < 0) minute = 0;
-                                _reminderTimes[index]['minute'] =
-                                    minute.toString().padLeft(2, '0');
-                              }
-                            },
+                            onChanged: (value) => _updateMinute(index, value),
                           ),
                         ),
                         const SizedBox(width: 12),
-                        // AM/PM toggle
                         GestureDetector(
                           onTap: () => _togglePeriod(index),
                           child: Container(
@@ -170,12 +174,12 @@ class _ReminderTimesWidgetState extends State<ReminderTimesWidget> {
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              _reminderTimes[index]['period'],
-                              // style: GoogleFonts.poppins(
-                              //   fontSize: 14,
-                              //   color: AppColors.splashScreenColor,
-                              //   fontWeight: FontWeight.w500,
-                              // ),
+                              widget.reminderTimes[index]['period'],
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: AppColors.splashScreenColor,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
@@ -184,8 +188,7 @@ class _ReminderTimesWidgetState extends State<ReminderTimesWidget> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                // Delete button
-                if (_reminderTimes.isNotEmpty)
+                if (widget.reminderTimes.isNotEmpty)
                   InkWell(
                     onTap: () => _removeReminderTime(index),
                     child: Container(
@@ -213,7 +216,6 @@ class _ReminderTimesWidgetState extends State<ReminderTimesWidget> {
           );
         }),
 
-        // Add new time button
         Container(
           width: 312,
           height: 50,

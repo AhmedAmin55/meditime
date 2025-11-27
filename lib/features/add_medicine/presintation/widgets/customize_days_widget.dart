@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 
 class CustomizeDaysWidget extends StatefulWidget {
-  const CustomizeDaysWidget({super.key});
+  final String selectedDay;
+  final Function(String) onDayChanged;
+
+  const CustomizeDaysWidget({
+    super.key,
+    required this.selectedDay,
+    required this.onDayChanged,
+  });
 
   @override
   State<CustomizeDaysWidget> createState() => _CustomizeDaysWidgetState();
 }
 
 class _CustomizeDaysWidgetState extends State<CustomizeDaysWidget> {
-  String selectedOption = 'Every sunday';
   bool isDropdownOpen = false;
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
@@ -25,87 +31,99 @@ class _CustomizeDaysWidgetState extends State<CustomizeDaysWidget> {
   ];
 
   OverlayEntry _createOverlayEntry() {
-    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return _emptyOverlay();
+
     var size = renderBox.size;
 
     return OverlayEntry(
-      builder: (context) => Positioned(
-        width: 180,
-        child: CompositedTransformFollower(
-          link: _layerLink,
-          showWhenUnlinked: false,
-          offset: Offset(size.width - 180, 60),
-          child: Material(
-            elevation: 8,
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                  width: 1,
-                ),
-              ),
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                shrinkWrap: true,
-                itemCount: dayOptions.length,
-                separatorBuilder: (context, index) => Divider(
-                  height: 1,
-                  color: Colors.grey.shade200,
-                ),
-                itemBuilder: (context, index) {
-                  final option = dayOptions[index];
-                  final isSelected = option == selectedOption;
-                  return InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedOption = option;
-                        _removeOverlay();
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            option,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: isSelected
-                                  ? Colors.blue.shade700
-                                  : Colors.black87,
-                            ),
-                          ),
-                          if (isSelected)
-                            Container(
-                              width: 16,
-                              height: 16,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.blue.shade700,
-                                  width: 5,
-                                ),
-                              ),
-                            ),
-                        ],
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: _removeOverlay,
+        child: Stack(
+          children: [
+            Positioned(
+              width: 180,
+              child: CompositedTransformFollower(
+                link: _layerLink,
+                showWhenUnlinked: false,
+                offset: Offset(size.width - 180, 60),
+                child: Material(
+                  elevation: 8,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.grey.shade300,
+                        width: 1,
                       ),
                     ),
-                  );
-                },
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      shrinkWrap: true,
+                      itemCount: dayOptions.length,
+                      separatorBuilder: (context, index) => Divider(
+                        height: 1,
+                        color: Colors.grey.shade200,
+                      ),
+                      itemBuilder: (context, index) {
+                        final option = dayOptions[index];
+                        final isSelected = option == widget.selectedDay;
+                        return InkWell(
+                          onTap: () {
+                            _removeOverlay();
+                            widget.onDayChanged(option);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  option,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: isSelected
+                                        ? Colors.blue.shade700
+                                        : Colors.black87,
+                                  ),
+                                ),
+                                if (isSelected)
+                                  Container(
+                                    width: 16,
+                                    height: 16,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.blue.shade700,
+                                        width: 5,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
+  }
+
+  OverlayEntry _emptyOverlay() {
+    return OverlayEntry(builder: (context) => SizedBox.shrink());
   }
 
   void _toggleDropdown() {
@@ -123,9 +141,11 @@ class _CustomizeDaysWidgetState extends State<CustomizeDaysWidget> {
   void _removeOverlay() {
     _overlayEntry?.remove();
     _overlayEntry = null;
-    setState(() {
-      isDropdownOpen = false;
-    });
+    if (mounted) {
+      setState(() {
+        isDropdownOpen = false;
+      });
+    }
   }
 
   @override
@@ -144,7 +164,6 @@ class _CustomizeDaysWidgetState extends State<CustomizeDaysWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title: Customize days
             Text(
               'Customize days',
               style: TextStyle(
@@ -154,8 +173,6 @@ class _CustomizeDaysWidgetState extends State<CustomizeDaysWidget> {
               ),
             ),
             const SizedBox(height: 10),
-
-            // Notify Me box - Outer container (312x50)
             Container(
               width: 312,
               height: 50,
@@ -171,7 +188,6 @@ class _CustomizeDaysWidgetState extends State<CustomizeDaysWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Left: Notify Me
                   const Text(
                     'Notify me',
                     style: TextStyle(
@@ -180,8 +196,6 @@ class _CustomizeDaysWidgetState extends State<CustomizeDaysWidget> {
                       color: Colors.black87,
                     ),
                   ),
-
-                  // Right: Inner box (158x41) - Day selector
                   GestureDetector(
                     onTap: _toggleDropdown,
                     child: Container(
@@ -199,12 +213,15 @@ class _CustomizeDaysWidgetState extends State<CustomizeDaysWidget> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            selectedOption,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black87,
+                          Expanded(
+                            child: Text(
+                              widget.selectedDay,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           Icon(

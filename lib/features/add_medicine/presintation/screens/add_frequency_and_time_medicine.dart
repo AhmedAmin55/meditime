@@ -15,15 +15,61 @@ import '../widgets/durationinputField.dart';
 import '../widgets/progress_bar.dart';
 import '../widgets/reminder_times_widget.dart';
 
-class AddFrequencyAndTimeMedicineState extends StatelessWidget {
+class AddFrequencyAndTimeMedicineState extends StatefulWidget {
+  const AddFrequencyAndTimeMedicineState({super.key});
+
+  @override
+  State<AddFrequencyAndTimeMedicineState> createState() => _AddFrequencyAndTimeMedicineStateState();
+}
+
+class _AddFrequencyAndTimeMedicineStateState extends State<AddFrequencyAndTimeMedicineState> {
   final TextEditingController _durationController = TextEditingController();
   String _selectedUnit = "days";
+  String _selectedDay = "Every sunday";
+  List<Map<String, dynamic>> _reminderTimes = [
+    {'hour': '08', 'minute': '00', 'period': 'AM'},
+  ];
+
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // لو في داتا محفوظة من قبل، نملي بيها الـ fields
+    final cubit = context.read<AddMedicineCubit>();
+    _durationController.text = cubit.durationNumber ?? '';
+    _selectedUnit = cubit.durationUnit ?? 'days';
+    _selectedDay = cubit.customizeDays ?? 'Every sunday';
+    _reminderTimes = cubit.reminderTimes ?? [
+      {'hour': '08', 'minute': '00', 'period': 'AM'},
+    ];
+  }
+
+  @override
+  void dispose() {
+    _durationController.dispose();
+    super.dispose();
+  }
+
+  // Method لحفظ الداتا في الـ Cubit
+  void _saveData() {
+    final cubit = context.read<AddMedicineCubit>();
+    cubit.durationNumber = _durationController.text.trim();
+    cubit.durationUnit = _selectedUnit;
+    cubit.customizeDays = _selectedDay;
+    cubit.reminderTimes = _reminderTimes;
+  }
+
   @override
   Widget build(BuildContext context) {
-
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
+    // نحفظ الداتا كل ما حاجة تتغير
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _saveData();
+    });
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -88,13 +134,34 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
                                 numberController: _durationController,
                                 selectedUnit: _selectedUnit,
                                 onUnitChanged: (value) {
-                                  _selectedUnit = value ?? "days";
+                                  setState(() {
+                                    _selectedUnit = value ?? "days";
+                                  });
+                                  _saveData();
+                                },
+                                onNumberChanged: () {
+                                  _saveData();
                                 },
                               ),
-                              const CustomizeDaysWidget(),
+                              CustomizeDaysWidget(
+                                selectedDay: _selectedDay,
+                                onDayChanged: (day) {
+                                  setState(() {
+                                    _selectedDay = day;
+                                  });
+                                },
+                              ),
                               const SizedBox(height: 20),
                               // ===== Reminder Times =====
-                              const ReminderTimesWidget(),
+                              ReminderTimesWidget(
+                                reminderTimes: _reminderTimes,
+                                onTimesChanged: (times) {
+                                  setState(() {
+                                    _reminderTimes = times;
+                                  });
+                                  _saveData();
+                                },
+                              ),
                             ],
                           ),
                         ),
@@ -110,48 +177,3 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
     );
   }
 }
-
-// Expanded(
-//   child: Stack(
-//     children: [
-//       const AddPageBackground(),
-//       SingleChildScrollView(
-//         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 24),
-//           child: Column(
-//             children: [
-//               const SizedBox(height: 90),
-//               ScreenInfo(
-//                 imagePath: AppImages.medicineFrequencyScreenIcon,
-//                 title: AppTexts.frequencyAndTime,
-//                 subtitle: AppTexts.howOftenDoYouTakeThis,
-//               ),
-//               const SizedBox(height: 32),
-//               // ===== Duration Input Field =====
-//               DurationInputField(
-//                 numberController: _durationController,
-//                 selectedUnit: _selectedUnit,
-//                 onUnitChanged: (value) {
-//                   setState(() {
-//                     _selectedUnit = value ?? "days";
-//                   });
-//                 },
-//               ),
-//
-//               const SizedBox(height: 20),
-//
-//               // ===== Customize Days =====
-//               const CustomizeDaysWidget(),
-//
-//               const SizedBox(height: 20),
-//
-//               // ===== Reminder Times =====
-//               const ReminderTimesWidget(),
-//               const SizedBox(height: 40),
-//             ],
-//           ),
-//         ),
-//       ),
-//     ],
-//   ),
-// ),

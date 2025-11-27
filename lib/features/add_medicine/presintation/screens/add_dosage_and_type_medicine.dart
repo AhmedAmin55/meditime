@@ -14,15 +14,48 @@ import '../widgets/custom_input_field.dart';
 import '../widgets/medicine_type_selector.dart';
 import '../widgets/progress_bar.dart';
 
-class AddDosageAndTypeMedicine extends StatelessWidget {
+class AddDosageAndTypeMedicine extends StatefulWidget {
   AddDosageAndTypeMedicine({super.key});
 
+  @override
+  State<AddDosageAndTypeMedicine> createState() => _AddDosageAndTypeMedicineState();
+}
+
+class _AddDosageAndTypeMedicineState extends State<AddDosageAndTypeMedicine> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController dosageController = TextEditingController();
+  String? selectedMedicineType;
+
+  @override
+  void initState() {
+    super.initState();
+    // لو في داتا محفوظة من قبل، نملي بيها الـ fields
+    final cubit = context.read<AddMedicineCubit>();
+    dosageController.text = cubit.dosage ?? '';
+    selectedMedicineType = cubit.medicineType;
+  }
+
+  @override
+  void dispose() {
+    dosageController.dispose();
+    super.dispose();
+  }
+
+  void _saveDosageData() {
+    // نحفظ الداتا في الـ Cubit
+    context.read<AddMedicineCubit>().dosage = dosageController.text.trim();
+  }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
+    // نحفظ الداتا كل ما الـ widget يتبني
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _saveDosageData();
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -45,13 +78,11 @@ class AddDosageAndTypeMedicine extends StatelessWidget {
                     imagePath: AppImages.logo,
                   ),
                   const SizedBox(height: 8),
-                  // ======= Progress Bar =======
                   ProgressBar(isPage: 1),
                 ],
               ),
             ),
             const SizedBox(height: 8),
-            // ======= Body =======
             Expanded(
               child: Container(
                 height: height,
@@ -78,11 +109,18 @@ class AddDosageAndTypeMedicine extends StatelessWidget {
                       child: Form(
                         key: _formKey,
                         child: ListView(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
                           children: [
-                            Text(AppTexts.dosage,style: AppTextsStyle.poppinsRegular25(context).copyWith(fontSize: 15,
-                                color: AppColors.black.withOpacity(0.6)),),
+                            Text(
+                              AppTexts.dosage,
+                              style: AppTextsStyle.poppinsRegular25(context)
+                                  .copyWith(
+                                  fontSize: 15,
+                                  color: AppColors.black.withOpacity(0.6)),
+                            ),
                             const SizedBox(height: 8),
                             CustomInputField(
+                              controller: dosageController,
                               hint: "e.g. 1 tablet, 1 spoon, 5 ml",
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -91,7 +129,15 @@ class AddDosageAndTypeMedicine extends StatelessWidget {
                                 return null;
                               },
                             ),
-                            MedicineTypeSelector(),
+                            MedicineTypeSelector(
+                              selectedType: selectedMedicineType,
+                              onTypeSelected: (type) {
+                                setState(() {
+                                  selectedMedicineType = type;
+                                });
+                                context.read<AddMedicineCubit>().medicineType = type;
+                              },
+                            ),
                           ],
                         ),
                       ),

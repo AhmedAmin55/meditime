@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditime/core/constants/app_images.dart';
-import 'package:meditime/core/constants/app_texts.dart';
 import 'package:meditime/features/add_medicine/presintation/screens/add_dosage_and_type_medicine.dart';
 import 'package:meditime/features/add_medicine/presintation/screens/add_frequency_and_time_medicine.dart';
 import 'package:meditime/features/add_medicine/presintation/screens/add_name_medicine.dart';
@@ -110,17 +109,27 @@ class Navbar extends StatelessWidget {
       onTap: () {
         final navCubit = context.read<NavCubit>();
         final addCubit = context.read<AddMedicineCubit>();
+
         if (navCubit.currentIndex != 2) {
+
           addCubit.addMedicineChanger(newIndex: 0);
           navCubit.changeScreen(index: 2);
         } else {
-          int nextIndex = addCubit.isPage + 1;
-          print(nextIndex);
-          if (nextIndex <= 3) {
-            addCubit.addMedicineChanger(newIndex: nextIndex);
-          } else {
-            addCubit.isPage = 0;
-            navCubit.changeScreen(index: 0);
+
+          bool canProceed = _validateCurrentPage(context, addCubit);
+
+          if (canProceed) {
+            int nextIndex = addCubit.isPage + 1;
+            print('Moving to page: $nextIndex');
+
+            if (nextIndex <= 3) {
+
+              addCubit.addMedicineChanger(newIndex: nextIndex);
+            } else {
+
+              addCubit.isPage = 0;
+              navCubit.changeScreen(index: 0);
+            }
           }
         }
       },
@@ -143,5 +152,65 @@ class Navbar extends StatelessWidget {
             : Center(child: Image.asset(AppImages.addScreenIcon, width: 17)),
       ),
     );
+  }
+
+  // ============ Validation Helper ============
+  bool _validateCurrentPage(BuildContext context, AddMedicineCubit cubit) {
+    switch (cubit.isPage) {
+      case 0: // Page 0: Medicine Name
+        if (cubit.nameFormKey.currentState?.validate() ?? false) {
+          cubit.nameFormKey.currentState?.save();
+          return true;
+        }
+        return false;
+
+      case 1: // Page 1: Dosage & Type
+        if (cubit.dosage == null || cubit.dosage!.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Please enter dosage'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return false;
+        }
+        if (cubit.medicineType == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Please select medicine type'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return false;
+        }
+        return true;
+
+      case 2: // Page 2: Frequency & Time
+        if (cubit.durationNumber == null || cubit.durationNumber!.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Please enter duration'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return false;
+        }
+        if (cubit.reminderTimes == null || cubit.reminderTimes!.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Please add at least one reminder time'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return false;
+        }
+        return true;
+
+      case 3: // Page 3: Review - Ready to save
+        return true;
+
+      default:
+        return false;
+    }
   }
 }

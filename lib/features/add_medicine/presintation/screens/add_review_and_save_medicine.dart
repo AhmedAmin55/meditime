@@ -16,10 +16,20 @@ import '../widgets/summary.dart';
 class AddReviewAndSaveMedicine extends StatelessWidget {
   const AddReviewAndSaveMedicine({super.key});
 
+  String _formatReminderTimes(List<Map<String, dynamic>>? times) {
+    if (times == null || times.isEmpty) return 'No reminders';
+
+    return times.map((time) {
+      return '${time['hour']}:${time['minute']} ${time['period']}';
+    }).join(', ');
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    final cubit = context.read<AddMedicineCubit>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -74,13 +84,14 @@ class AddReviewAndSaveMedicine extends StatelessWidget {
                         child: ListView(
                           children: [
                             Summary(
-                              medicineName: "Vitamine",
-                              assignTo: "Sister",
-                              specialInstructions:
-                                  "Before food and after sleep",
-                              dosage: "1 ml",
-                              medicineType: "Liquid",
-                              reminderTimes: "Everyday",
+                              medicineName: cubit.medicineName ?? 'N/A',
+                              assignTo: cubit.assignToWho ?? 'N/A',
+                              specialInstructions: cubit.specialInstructions ?? 'None',
+                              dosage: cubit.dosage ?? 'N/A',
+                              medicineType: cubit.medicineType ?? 'N/A',
+                              duration: '${cubit.durationNumber ?? '0'} ${cubit.durationUnit ?? 'days'}',
+                              customizeDays: cubit.customizeDays ?? 'N/A',
+                              reminderTimes: _formatReminderTimes(cubit.reminderTimes),
                             ),
                             SizedBox(height: 20),
                           ],
@@ -97,41 +108,3 @@ class AddReviewAndSaveMedicine extends StatelessWidget {
     );
   }
 }
-
-// Expanded(
-//   child: Stack(
-//     children: [
-//       const AddPageBackground(),
-//       SingleChildScrollView(
-//         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 24),
-//           child: Column(
-//             children: [
-//               const SizedBox(height: 90),
-//               ScreenInfo(
-//                 imagePath:AppImages.medicineReviewScreenIcon,
-//                 title: AppTexts.reviewAndSave,
-//                 subtitle: AppTexts.everythingLooksGood,
-//               ),
-//
-//               const SizedBox(height: 80),
-//
-//               Center(
-//                 child: const Summary(
-//                   medicineName: "Vitamine",
-//                   assignTo: "Sister",
-//                   specialInstructions: "Before food and after sleep",
-//                   dosage: "1 ml",
-//                   medicineType: "Liquid",
-//                   reminderTimes: "Everyday",
-//                 ),
-//               ),
-//
-//               const SizedBox(height: 40),
-//             ],
-//           ),
-//         ),
-//       ),
-//     ],
-//   ),
-// ),

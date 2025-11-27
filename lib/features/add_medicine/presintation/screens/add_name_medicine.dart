@@ -14,13 +14,51 @@ import '../widgets/add_page_return_icon.dart';
 import '../widgets/custom_input_field.dart';
 import '../widgets/progress_bar.dart';
 
-class AddNameMedicine extends StatelessWidget {
+class AddNameMedicine extends StatefulWidget {
   AddNameMedicine({super.key});
+
+  @override
+  State<AddNameMedicine> createState() => _AddNameMedicineState();
+}
+
+class _AddNameMedicineState extends State<AddNameMedicine> {
+  // ============ Controllers ============
+  final TextEditingController medicineNameController = TextEditingController();
+  final TextEditingController specialInstructionsController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // لو في داتا محفوظة من قبل، نملي بيها الـ fields
+    final cubit = context.read<AddMedicineCubit>();
+    medicineNameController.text = cubit.medicineName ?? '';
+    specialInstructionsController.text = cubit.specialInstructions ?? '';
+  }
+
+  @override
+  void dispose() {
+    medicineNameController.dispose();
+    specialInstructionsController.dispose();
+    super.dispose();
+  }
+
+  void _saveNameData() {
+    // نحفظ الداتا في الـ Cubit
+    final cubit = context.read<AddMedicineCubit>();
+    cubit.medicineName = medicineNameController.text.trim();
+    cubit.specialInstructions = specialInstructionsController.text.trim();
+  }
+
   @override
   Widget build(BuildContext context) {
-
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
+    // نحفظ الداتا كل ما الـ widget يتبني
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _saveNameData();
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -72,15 +110,20 @@ class AddNameMedicine extends StatelessWidget {
                     SizedBox(height: 20),
                     Expanded(
                       child: Form(
-                        key: (context).read<AddMedicineCubit>().nameFormKey,
+                        key: context.read<AddMedicineCubit>().nameFormKey,
                         child: ListView(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 0,
+                            horizontal: 20,
                             vertical: 0,
                           ),
                           children: [
-                            Text(AppTexts.assignToWho,style: AppTextsStyle.poppinsRegular25(context).copyWith(fontSize: 15,
-                                color: AppColors.black.withOpacity(0.6)),),
+                            Text(
+                              AppTexts.assignToWho,
+                              style: AppTextsStyle.poppinsRegular25(context)
+                                  .copyWith(
+                                  fontSize: 15,
+                                  color: AppColors.black.withOpacity(0.6)),
+                            ),
                             const SizedBox(height: 8),
                             CustomInputField(
                               validator: (value) =>
@@ -95,25 +138,46 @@ class AddNameMedicine extends StatelessWidget {
                                 "mariam",
                                 "jomana",
                               ],
+                              onChanged: (value) {
+                                context.read<AddMedicineCubit>().assignToWho = value;
+                              },
                             ),
                             const SizedBox(height: 20),
-                            Text(AppTexts.medicineName2,style: AppTextsStyle.poppinsRegular25(context).copyWith(fontSize: 15,
-                                color: AppColors.black.withOpacity(0.6)),),
+                            Text(
+                              AppTexts.medicineName2,
+                              style: AppTextsStyle.poppinsRegular25(context)
+                                  .copyWith(
+                                  fontSize: 15,
+                                  color: AppColors.black.withOpacity(0.6)),
+                            ),
                             const SizedBox(height: 8),
                             CustomInputField(
+                              controller: medicineNameController,
                               validator: (value) => value!
                                   .trim()
                                   .validateRequired(AppTexts.enterMedicineName),
                               hint: "e.g. Vitamin, Panadol",
+                              onSaved: (value) {
+                                context.read<AddMedicineCubit>().medicineName = value?.trim();
+                              },
                             ),
                             const SizedBox(height: 20),
-                            Text(AppTexts.specialInstructions,style: AppTextsStyle.poppinsRegular25(context).copyWith(fontSize: 15,
-                                color: AppColors.black.withOpacity(0.6)),),
+                            Text(
+                              AppTexts.specialInstructions,
+                              style: AppTextsStyle.poppinsRegular25(context)
+                                  .copyWith(
+                                  fontSize: 15,
+                                  color: AppColors.black.withOpacity(0.6)),
+                            ),
                             const SizedBox(height: 8),
                             CustomInputField(
+                              controller: specialInstructionsController,
                               hint:
-                                  "e.g. Take with food, Take on empty \nstomach",
+                              "e.g. Take with food, Take on empty \nstomach",
                               maxLines: 2,
+                              onSaved: (value) {
+                                context.read<AddMedicineCubit>().specialInstructions = value?.trim();
+                              },
                             ),
                           ],
                         ),
