@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,8 @@ import '../constants/app_colors.dart';
 
 class Navbar extends StatelessWidget {
   @override
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<NavCubit, NavState>(
@@ -88,8 +91,7 @@ class Navbar extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         BlocProvider.of<NavCubit>(context).changeScreen(index: index);
-        if(index==4){
-        }
+        if (index == 4) {}
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
@@ -122,9 +124,47 @@ class Navbar extends StatelessWidget {
           print(nextIndex);
           if (nextIndex <= 3) {
             addCubit.addMedicineChanger(newIndex: nextIndex);
+            if(context.read<AddMedicineCubit>().namePageKey.currentState!.validate()){
+              print("===========><========");
+            }
           } else {
+            firestore
+                .collection("user_medicines")
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .set({
+                  "medicine_name": context
+                      .read<AddMedicineCubit>()
+                      .medicineName
+                      .text,
+                  "special_instructions": context
+                      .read<AddMedicineCubit>()
+                      .specialInstructions
+                      .text,
+                  "assign_to_who": context
+                      .read<AddMedicineCubit>()
+                      .assignTo
+                      .text,
+                  "medicine_type": context
+                      .read<AddMedicineCubit>()
+                      .selectedType,
+                  "dosage": context.read<AddMedicineCubit>().dosage.text,
+                  "duration_in_days": context.read<AddMedicineCubit>().duration,
+                  "custom_day": context.read<AddMedicineCubit>().notifyMe,
+                  "custom_times": context
+                      .read<AddMedicineCubit>()
+                      .reminderTimes.map((e)=> e.toMap()).toList(),
+                }, SetOptions(merge: true));
+            print(context.read<AddMedicineCubit>().medicineName.text);
+            print(context.read<AddMedicineCubit>().specialInstructions.text);
+            print(context.read<AddMedicineCubit>().assignTo.text);
+            print(context.read<AddMedicineCubit>().selectedType);
+            print(context.read<AddMedicineCubit>().dosage.text);
+            print(context.read<AddMedicineCubit>().reminderTimes);
             addCubit.isPage = 0;
             navCubit.changeScreen(index: 0);
+            context.read<AddMedicineCubit>().reminderTimes.clear();
+            context.read<AddMedicineCubit>().uiRows.clear();
+
           }
         }
       },

@@ -91,6 +91,7 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
                                   _selectedUnit = value ?? "days";
                                 },
                               ),
+                              SizedBox(height: 20,),
                               const CustomizeDaysWidget(),
                               const SizedBox(height: 20),
                               // ===== Reminder Times =====

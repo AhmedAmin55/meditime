@@ -7,9 +7,10 @@ import 'package:meditime/core/constants/app_textstyle.dart';
 class CustomInputField extends StatelessWidget {
   final String? hint;
   final bool isDropdown;
+  final bool? enableBorder;
   final List<String>? items;
   final int maxLines;
-  final FormFieldSetter<String>? onSaved;
+  final FormFieldSetter<String>? onChange;
   final FormFieldValidator<String>? validator;
   final TextEditingController? controller;
   final double? formHeight;
@@ -25,7 +26,7 @@ class CustomInputField extends StatelessWidget {
     this.isDropdown = false,
     this.items,
     this.maxLines = 1,
-    this.onSaved,
+    this.onChange,
     this.validator,
     this.controller,
     this.formHeight,
@@ -33,7 +34,7 @@ class CustomInputField extends StatelessWidget {
     this.horPadding,
     this.verPadding,
     this.dropdownHeight,
-    this.dropdownWidth,
+    this.dropdownWidth, this.enableBorder,
   });
 
   @override
@@ -52,6 +53,7 @@ class CustomInputField extends StatelessWidget {
                       (maxLines == 2 ? height * 0.12 : height * 0.06),
                   width: formWidth ?? width,
                   child: DropdownButtonFormField2<String>(
+
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: AppColors.white,
@@ -105,8 +107,7 @@ class CustomInputField extends StatelessWidget {
                             )
                             .toList() ??
                         [],
-                    onChanged: (_) {},
-                    onSaved: onSaved,
+                    onChanged: onChange,
                   ),
                 )
               : SizedBox(
@@ -128,12 +129,12 @@ class CustomInputField extends StatelessWidget {
                         horizontal: horPadding ?? 24,
                         vertical: verPadding ?? (maxLines == 2 ? 24 : 12),
                       ),
-                      border: borderDecoration(),
-                      enabledBorder: borderDecoration(),
-                      focusedBorder: borderDecoration(),
+                      border: enableBorder != null? borderDecoration(): InputBorder.none,
+                      enabledBorder: enableBorder != null? borderDecoration(): InputBorder.none,
+                      focusedBorder:enableBorder != null? borderDecoration(): InputBorder.none,
                     ),
                     validator: validator,
-                    onSaved: onSaved,
+                    onChanged: onChange,
                   ),
                 ),
         ],

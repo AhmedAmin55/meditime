@@ -36,7 +36,6 @@ class LoginCubit extends Cubit<LoginState> {
         emit(LoginFailure(errorMessage: "User data not found in Firestore"));
         return;
       }
-
       emit(LoginSuccess(user: user));
     } on FirebaseAuthException catch (e) {
       if (e.code == "invalid-credential") {

@@ -127,22 +127,41 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
 import '../../../../core/constants/app_textstyle.dart';
+import '../../business_logic/add_medicine_cubit/add_medicine_cubit.dart';
 import '../../data/models/medicine_type_model.dart';
 
-class MedicineTypeSelector extends StatelessWidget {
+enum type { pills, cream, liquid, injection }
+
+class MedicineTypeSelector extends StatefulWidget {
   const MedicineTypeSelector({super.key});
 
+  @override
+  State<MedicineTypeSelector> createState() => _MedicineTypeSelectorState();
+}
+
+class _MedicineTypeSelectorState extends State<MedicineTypeSelector> {
   static final List<MedicineTypeModel> _items = [
-    MedicineTypeModel(Icon: AppImages.pillsIcon, title: AppTexts.pills),
-    MedicineTypeModel(Icon: AppImages.creamIcon, title: AppTexts.cream),
-    MedicineTypeModel(Icon: AppImages.liquidIcon, title: AppTexts.liquid),
-    MedicineTypeModel(Icon: AppImages.injectionIcon, title: AppTexts.injection),
+    MedicineTypeModel(Icon: AppImages.pillsIcon, title: AppTexts.pills, id: 0),
+    MedicineTypeModel(Icon: AppImages.creamIcon, title: AppTexts.cream, id: 1),
+    MedicineTypeModel(
+      Icon: AppImages.liquidIcon,
+      title: AppTexts.liquid,
+      id: 2,
+    ),
+    MedicineTypeModel(
+      Icon: AppImages.injectionIcon,
+      title: AppTexts.injection,
+      id: 3,
+    ),
   ];
+
+  int? isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -162,32 +181,31 @@ class MedicineTypeSelector extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              // setState(() {
-              //   if(selectedType==null){
-              //     selectedType = type.name;
-              //     field.didChange(type.name);}
-              //   else{
-              //     selectedType = null;
-              //     field.didChange(null);
-              //   }
-              // });
+              setState(() {
+                isSelected = index;
+
+                context.read<AddMedicineCubit>().selectedType = _items[index].title;
+                // if(selectedType==null){
+                //   selectedType = type.name;
+                //   field.didChange(type.name);}
+                // else{
+                //   selectedType = null;
+                //   field.didChange(null);
+                // }
+              });
             },
             child: Container(
               width: 141,
               height: 89,
               decoration: BoxDecoration(
-                color:
-                    // isSelected
-                    //     ?AppColors.splashScreenColor.withOpacity(0.2)
-                    //     :
-                    AppColors.white,
+                color: isSelected == index
+                    ? AppColors.splashScreenColor.withOpacity(0.2)
+                    : AppColors.white,
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color:
-                      // isSelected
-                      //     ? AppColors.splashScreenColor.withOpacity(0.9)
-                      //     :
-                      AppColors.medicineBorderColor.withOpacity(0.7),
+                  color: isSelected  == index
+                      ? AppColors.splashScreenColor.withOpacity(0.9)
+                      : AppColors.medicineBorderColor.withOpacity(0.7),
                   width: 0.5,
                 ),
                 boxShadow: [

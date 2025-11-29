@@ -18,6 +18,7 @@ class AddDosageAndTypeMedicine extends StatelessWidget {
   AddDosageAndTypeMedicine({super.key});
 
   final _formKey = GlobalKey<FormState>();
+  TextEditingController _dosageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -79,10 +80,21 @@ class AddDosageAndTypeMedicine extends StatelessWidget {
                         key: _formKey,
                         child: ListView(
                           children: [
-                            Text(AppTexts.dosage,style: AppTextsStyle.poppinsRegular25(context).copyWith(fontSize: 15,
-                                color: AppColors.black.withOpacity(0.6)),),
+                            Text(
+                              AppTexts.dosage,
+                              style: AppTextsStyle.poppinsRegular25(context)
+                                  .copyWith(
+                                    fontSize: 15,
+                                    color: AppColors.black.withOpacity(0.6),
+                                  ),
+                            ),
                             const SizedBox(height: 8),
                             CustomInputField(
+                              controller: _dosageController,
+                              onChange: (va) {
+                                context.read<AddMedicineCubit>().dosage.text =
+                                    _dosageController.text;
+                              },
                               hint: "e.g. 1 tablet, 1 spoon, 5 ml",
                               validator: (value) {
                                 if (value == null || value.isEmpty) {

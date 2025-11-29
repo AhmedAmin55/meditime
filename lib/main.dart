@@ -19,7 +19,6 @@ void main() async {
 
 class Meditime extends StatelessWidget {
   const Meditime({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
