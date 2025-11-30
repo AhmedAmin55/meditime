@@ -76,7 +76,6 @@ class _CustomTextformfieldState extends State<CustomTextformfield> {
     return Material(
       elevation: 2,
       shadowColor: AppColors.waitingMedicineColor.withOpacity(0.5),
-
       borderRadius: BorderRadius.circular(15),
       color: AppColors.white,
       child: Padding(

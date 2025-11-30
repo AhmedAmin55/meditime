@@ -168,10 +168,7 @@ class Navbar extends StatelessWidget {
                   ? (isLastPage
                   ? const Icon(Icons.check, color: Colors.white, size: 28)
                   : const Icon(Icons.arrow_forward, color: Colors.white, size: 24))
-                  : const Text(
-                "...",
-                style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-              ))
+                  : Image.asset(AppImages.addWaitingIcon,width: 25, color: Colors.white))
                   : Image.asset(AppImages.addScreenIcon, width: 17, color: Colors.white),
             ),
           ),

@@ -93,12 +93,7 @@ class AddDosageAndTypeMedicine extends StatelessWidget {
                               controller: cubit.dosage, // نستخدم controller الـ cubit
                               hint: "e.g. 1 tablet, 1 spoon, 5 ml",
                               onChange: (value) {
-                                // نعمل emit يدوي عشان الـ state يتحدث فورًا
-
-                                cubit.emit(AddMedicineInProgress(
-                                  currentPage: cubit.isPage,
-                                  uiRows: List.from(cubit.uiRows),
-                                ));
+                                cubit.changeDodage();
                               },
                               validator: (value) {
                                 if (value == null || value.isEmpty) {

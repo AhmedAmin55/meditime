@@ -28,6 +28,12 @@ class CustomizeDaysWidget extends StatelessWidget {
             child: CustomInputField(
               hint: cubit.notifyMe,
               isDropdown: true,
+              formWidth: 170,
+              formHeight: 40,
+              dropdownHeight: 120,
+              dropdownWidth: 170,
+              verPadding: 0,
+              horPadding: 0,
               items: const [
                 'Everyday',
                 'Every saturday',

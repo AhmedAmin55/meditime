@@ -130,7 +130,12 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
       _updateState();
     }
   }
-
+void changeDodage(){
+ emit(AddMedicineInProgress(
+    currentPage:isPage,
+    uiRows: List.from(uiRows),
+  ));
+}
   void reset() {
     isPage = 0;
     assignTo.text = "Me";

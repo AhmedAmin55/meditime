@@ -53,7 +53,6 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              // الجسم
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditime/core/constants/app_colors.dart';
+import '../../../../core/business_logic/medicine_cubit/medicinde_cubit.dart';
 import '../../../../core/models/medicine_model.dart';
 import '../../business_logic/search_cubit/search_cubit.dart';
 import '../widgets/active_search_bar.dart';
@@ -13,13 +14,14 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    // مهم جدًا: تحميل الداتا أول ما تدخل الشاشة
+    context.read<MedicineCubit>().fetchMedicines();
+
     return GestureDetector(
       onTap: () {
-        //FocusManager.instance.primaryFocus?.unfocus();
-        if (context.read<SearchCubit>().state == true)
+        if (context.read<SearchCubit>().state == true) {
           context.read<SearchCubit>().search();
+        }
       },
       child: Scaffold(
         backgroundColor: AppColors.scaffoldColor,
@@ -27,18 +29,34 @@ class HomeScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 15, right: 10),
             child: BlocBuilder<SearchCubit, bool>(
-              builder: (context, state) {
+              builder: (context, isSearching) {
                 return Column(
                   children: [
-                    HomeScreenHeader(),
+                    const HomeScreenHeader(),
                     const SizedBox(height: 12),
-                    state == false ? InactiveSearchBar() : ActiveSearchBar(),
+                    isSearching ? const ActiveSearchBar() : const InactiveSearchBar(),
                     const SizedBox(height: 10),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: medicineList.length,
-                        itemBuilder: (context, index) {
-                          return HomeMedicineCard(index: index);
+                      child: BlocBuilder<MedicineCubit, MedicineState>(
+                        builder: (context, state) {
+                          if (state is MedicineLoading) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                          if (state is MedicineLoaded) {
+                            if (state.medicines.isEmpty) {
+                              return const Center(child: Text("لا توجد أدوية حاليًا"));
+                            }
+                            return ListView.builder(
+                              itemCount: state.medicines.length,
+                              itemBuilder: (context, index) {
+                                return HomeMedicineCard(medicine: state.medicines[index]);
+                              },
+                            );
+                          }
+                          if (state is MedicineError) {
+                            return Center(child: Text(state.message));
+                          }
+                          return const Center(child: Text("جاري تحميل الأدوية..."));
                         },
                       ),
                     ),

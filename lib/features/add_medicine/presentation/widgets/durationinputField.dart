@@ -24,28 +24,33 @@ class DurationInputField extends StatelessWidget {
           const Text("i will take it for"),
           const Spacer(),
           // الرقم
-          SizedBox(
-            width: 80,
-            child: CustomInputField(
-              hint: "00",
-              onChange: (value) {
-                final num = int.tryParse(value ?? "0") ?? 0;
-                cubit.setDurationRaw(num);
-              },
-            ),
+          CustomInputField(
+            formWidth: 50,
+            formHeight: 40,
+            horPadding: 10,
+            verPadding: 0,
+            hint: "00",
+            enableBorder: true,
+            onChange: (value) {
+              final num = int.tryParse(value ?? "0") ?? 0;
+              cubit.setDurationRaw(num);
+            },
           ),
           const SizedBox(width: 10),
           // الوحدة
-          SizedBox(
-            width: 125,
-            child: CustomInputField(
-              hint: cubit.selectedUnit,
-              isDropdown: true,
-              items: const ["days", "weeks", "months", "years"],
-              onChange: (unit) {
-                cubit.setDurationUnit(unit ?? "days");
-              },
-            ),
+          CustomInputField(
+            hint: cubit.selectedUnit,
+            formWidth: 100,
+            formHeight: 40,
+            dropdownHeight: 120,
+            dropdownWidth: 100,
+            verPadding: 0,
+            horPadding: 0,
+            isDropdown: true,
+            items: const ["days", "weeks", "months", "years"],
+            onChange: (unit) {
+              cubit.setDurationUnit(unit ?? "days");
+            },
           ),
         ],
       ),

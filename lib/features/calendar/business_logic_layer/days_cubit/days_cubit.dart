@@ -3,14 +3,16 @@ import 'package:meta/meta.dart';
 
 part 'days_state.dart';
 
-class DaysCubit extends Cubit<bool> {
-  DaysCubit()  : super(false);
-  void changeCalendarState() {
-    emit(!state);
-  }
-  late DateTime currentDate = DateTime.now();
-  late DateTime startOfWeek = currentDate.subtract(Duration(days: currentDate.weekday + 1));
-  DateTime getStartOfWeek() => startOfWeek;
-  DateTime getCurrentDate() => currentDate;
 
+
+class DaysCubit extends Cubit<DateTime> {
+  DaysCubit() : super(DateTime.now());
+
+  void selectDay(DateTime day) {
+    emit(DateTime(day.year, day.month, day.day));
+  }
+
+  void changeCalendarState() {
+    // لو عايز تضيف فانكشن تانية بعدين
+  }
 }

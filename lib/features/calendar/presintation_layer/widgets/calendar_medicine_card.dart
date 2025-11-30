@@ -1,81 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:meditime/core/business_logic/medicine_cubit/medicinde_cubit.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_textstyle.dart';
 import '../../../../core/models/medicine_model.dart';
-class CalendarMedicineCard extends StatelessWidget {
-  const CalendarMedicineCard({super.key, required this.index});
+import '../../business_logic_layer/days_cubit/days_cubit.dart';
+// calendar_medicine_card.dart
 
-  final int index;
+class CalendarMedicineCard extends StatelessWidget {
+  final MedicineModel medicine;
+  const CalendarMedicineCard({super.key, required this.medicine});
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
+    String time = "غير محدد";
+    final today = DateTime(
+      context.read<DaysCubit>().state.year,
+      context.read<DaysCubit>().state.month,
+      context.read<DaysCubit>().state.day,
+    );
+
+    final todayStatus = medicine.reminderTimesStatus
+        .where((s) {
+      final d = s.reminderTime.toDate();
+      return d.year == today.year && d.month == today.month && d.day == today.day;
+    })
+        .toList();
+
+    if (todayStatus.isNotEmpty) {
+      todayStatus.sort((a, b) => a.reminderTime.compareTo(b.reminderTime));
+      time = DateFormat('hh:mm a').format(todayStatus.first.reminderTime.toDate());
+    }
+
     return TimelineTile(
       alignment: TimelineAlign.manual,
-      isFirst: index == 0 ? true : false,
-      isLast: index == 9 ? true : false,
       lineXY: 0.18,
-      indicatorStyle: IndicatorStyle(
-        color: AppColors.timeLineColor,
-        width: 6,
-        indicatorXY: 0.3,
-      ),
-      beforeLineStyle: LineStyle(
-        color: AppColors.timeLineColor,
-        thickness: 0.5,
-      ),
-      afterLineStyle: LineStyle(color: AppColors.timeLineColor, thickness: 0.5),
+      indicatorStyle: const IndicatorStyle(width: 6, color: AppColors.timeLineColor),
+      beforeLineStyle: const LineStyle(color: AppColors.timeLineColor, thickness: 0.5),
+      afterLineStyle: const LineStyle(color: AppColors.timeLineColor, thickness: 0.5),
       startChild: Padding(
         padding: const EdgeInsets.only(right: 5, bottom: 32),
-        child: Text(
-         DateFormat("hh:mm a").format(medicineList[index].reminderTimes),
-          style: AppTextsStyle.spaceGroteskMedium22(
-            context,
-          ).copyWith(fontSize: 11),
-        ),
+        child: Text(time, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
       ),
       endChild: Container(
-        height: height * 0.08,
-        margin: EdgeInsets.only(bottom: 15, left: 15, right: 5),
-        padding: EdgeInsets.only(bottom: 10, left: 10, right: 0),
+        height: 70,
+        margin: const EdgeInsets.only(bottom: 15, left: 15, right: 5),
+        padding: const EdgeInsets.only(left: 10),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(width: 1, color: AppColors.medicineBorderColor),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.medicineBorderColor,
-              spreadRadius: 1.5,
-              blurRadius: 0.5,
-              offset: Offset(1, 2),
-            ),
-          ],
+          border: Border.all(color: AppColors.medicineBorderColor),
         ),
         child: ListTile(
-          leading: Image.asset(_medicineTypeIcon(), width: width * 0.10),
-          title: Text(
-            medicineList[index].medicineName,
-            style: AppTextsStyle.spaceGroteskMedium22(
-              context,
-            ).copyWith(fontSize: 13),
-          ),
-          subtitle: Text(
-            medicineList[index].medicineType,
-            style: AppTextsStyle.spaceGroteskRegular13(
-              context,
-            ).copyWith(fontSize: 11),
-          ),
+          leading: Image.asset(_getIcon(medicine.medicineType), width: width * 0.10),
+          title: Text(medicine.medicineName, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+          subtitle: Text(medicine.medicineType, style: const TextStyle(fontSize: 11)),
           trailing: Container(
-            height: height * 0.010,
-            width: width * 0.055,
+            width: 12,
+            height: 12,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: _getStatusColor(),
+              shape: BoxShape.circle,
+              color: _getStatusColor(medicine.currentStatus),
             ),
           ),
         ),
@@ -83,29 +74,22 @@ class CalendarMedicineCard extends StatelessWidget {
     );
   }
 
-  _medicineTypeIcon() {
-    switch (medicineList[index].medicineType) {
-      case "pills":
-        return AppImages.pillsIcon;
-      case "injection":
-        return AppImages.injectionIcon;
-      case "liquid":
-        return AppImages.liquidIcon;
-      case "cream":
-        return AppImages.creamIcon;
+  String _getIcon(String type) {
+    switch (type.toLowerCase()) {
+      case "pills": return AppImages.pillsIcon;
+      case "injection": return AppImages.injectionIcon;
+      case "liquid": return AppImages.liquidIcon;
+      case "cream": return AppImages.creamIcon;
+      default: return AppImages.pillsIcon;
     }
   }
 
-  Color _getStatusColor() {
-    switch (medicineList[index].status.toLowerCase()) {
-      case "missed":
-        return AppColors.missedMedicineColor;
-      case "taken":
-        return AppColors.takenMedicineColor;
-      case "waiting":
-        return AppColors.waitingMedicineColor;
-      default:
-        return Colors.grey;
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case "taken": return AppColors.takenMedicineColor;
+      case "missed": return AppColors.missedMedicineColor;
+      case "waiting": return AppColors.waitingMedicineColor;
+      default: return Colors.grey;
     }
   }
 }
