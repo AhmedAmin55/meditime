@@ -3,35 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditime/core/business_logic/nav_cubit/nav_cubit.dart';
 import 'package:meditime/core/constants/app_colors.dart';
 import 'package:meditime/core/constants/app_images.dart';
-
 import '../../business_logic/add_medicine_cubit/add_medicine_cubit.dart';
 
-class AddPageReturnIcon extends StatefulWidget {
-  const AddPageReturnIcon({super.key, this.onTap});
+class AddPageReturnIcon extends StatelessWidget {
+  const AddPageReturnIcon({super.key});
 
-  final GestureTapCallback? onTap;
-
-  @override
-  State<AddPageReturnIcon> createState() => _AddPageReturnIconState();
-}
-
-class _AddPageReturnIconState extends State<AddPageReturnIcon> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
     return Align(
-      alignment: Alignment(-0.85, 1),
+      alignment: const Alignment(-0.85, 1),
       heightFactor: 1.4,
       child: GestureDetector(
         onTap: () {
-         if ((context).read<AddMedicineCubit>().isPage >0){
-           (context).read<AddMedicineCubit>().addMedicineChanger(
-             newIndex: (context).read<AddMedicineCubit>().isPage - 1,
-           );
-         }else{
-           (context).read<NavCubit>().changeScreen(index: 0);
-         }
+          final cubit = context.read<AddMedicineCubit>();
+          if (cubit.isPage > 0) {
+            cubit.goBack();
+          } else {
+            context.read<NavCubit>().changeScreen(index: 0);
+          }
         },
         child: Container(
           width: width * 0.17,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meditime/features/add_medicine/presintation/widgets/screen_info.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
@@ -13,15 +12,16 @@ import '../widgets/add_page_return_icon.dart';
 import '../widgets/custom_input_field.dart';
 import '../widgets/medicine_type_selector.dart';
 import '../widgets/progress_bar.dart';
+import '../widgets/screen_info.dart';
 
 class AddDosageAndTypeMedicine extends StatelessWidget {
   AddDosageAndTypeMedicine({super.key});
 
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _dosageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<AddMedicineCubit>();
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -90,12 +90,16 @@ class AddDosageAndTypeMedicine extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             CustomInputField(
-                              controller: _dosageController,
-                              onChange: (va) {
-                                context.read<AddMedicineCubit>().dosage.text =
-                                    _dosageController.text;
-                              },
+                              controller: cubit.dosage, // نستخدم controller الـ cubit
                               hint: "e.g. 1 tablet, 1 spoon, 5 ml",
+                              onChange: (value) {
+                                // نعمل emit يدوي عشان الـ state يتحدث فورًا
+
+                                cubit.emit(AddMedicineInProgress(
+                                  currentPage: cubit.isPage,
+                                  uiRows: List.from(cubit.uiRows),
+                                ));
+                              },
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter dosage';

@@ -2,52 +2,36 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meditime/core/constants/app_colors.dart';
 import 'package:meditime/core/constants/app_images.dart';
-import 'package:meditime/core/constants/app_texts.dart';
-import 'package:meditime/features/add_medicine/presintation/screens/add_dosage_and_type_medicine.dart';
-import 'package:meditime/features/add_medicine/presintation/screens/add_frequency_and_time_medicine.dart';
-import 'package:meditime/features/add_medicine/presintation/screens/add_name_medicine.dart';
-import 'package:meditime/features/add_medicine/presintation/screens/add_review_and_save_medicine.dart';
-import '../../features/add_medicine/business_logic/add_medicine_cubit/add_medicine_cubit.dart';
-import '../../features/calendar/presintation_layer/screens/calendar_screen.dart';
-import '../../features/home/presintation/screens/home_screen.dart';
-import '../../features/notification/presintation/screens/notifications_screen.dart';
-import '../../features/profile/presintation/screens/profile_screen.dart';
+import 'package:meditime/core/services/user_medicine_service.dart';
+import 'package:meditime/features/add_medicine/business_logic/add_medicine_cubit/add_medicine_cubit.dart';
+import 'package:meditime/features/add_medicine/presentation/screens/add_medicine_flow_screen.dart';
+import 'package:meditime/features/calendar/presintation_layer/screens/calendar_screen.dart';
+import 'package:meditime/features/home/presintation/screens/home_screen.dart';
+import 'package:meditime/features/notification/presintation/screens/notifications_screen.dart';
+import 'package:meditime/features/profile/presintation/screens/profile_screen.dart';
 import '../business_logic/nav_cubit/nav_cubit.dart';
-import '../business_logic/user_cubit/user_cubit.dart';
-import '../constants/app_colors.dart';
 
 class Navbar extends StatelessWidget {
-  @override
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  const Navbar({super.key});
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<NavCubit, NavState>(
-        builder: (navCtx, navState) {
-          return BlocBuilder<AddMedicineCubit, AddMedicineState>(
-            builder: (addCtx, addState) {
-              if (navState is NavCalendar) {
-                return CalendarScreen();
-              } else if (navState is NavAdd) {
-                if (addState is AddMedicineDosage) {
-                  return AddDosageAndTypeMedicine();
-                } else if (addState is AddMedicineFrequency) {
-                  return AddFrequencyAndTimeMedicineState();
-                } else if (addState is AddMedicineReview) {
-                  return AddReviewAndSaveMedicine();
-                } else {
-                  return AddNameMedicine();
-                }
-              } else if (navState is NavNotification) {
-                return NotificationsScreen();
-              } else if (navState is NavProfile) {
-                return ProfileScreen();
-              } else {
-                return HomeScreen();
-              }
-            },
-          );
+        builder: (context, navState) {
+          if (navState is NavCalendar) {
+            return const CalendarScreen();
+          } else if (navState is NavNotification) {
+            return  NotificationsScreen();
+          } else if (navState is NavProfile) {
+            return  ProfileScreen();
+          } else if (navState is NavAdd) {
+            return const AddMedicineFlowScreen();
+          } else {
+            return const HomeScreen();
+          }
         },
       ),
       bottomNavigationBar: Container(
@@ -63,12 +47,7 @@ class Navbar extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(
-              right: 15,
-              left: 15,
-              bottom: 5,
-              top: 10,
-            ),
+            padding: const EdgeInsets.only(right: 15, left: 15, bottom: 5, top: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -86,20 +65,15 @@ class Navbar extends StatelessWidget {
   }
 
   Widget _buildNavItem(BuildContext context, String icon, int index) {
-    final navListener = context.watch<NavCubit>();
-    bool isSelected = navListener.currentIndex == index;
+    final navCubit = context.watch<NavCubit>();
+    bool isSelected = navCubit.currentIndex == index;
     return GestureDetector(
-      onTap: () {
-        BlocProvider.of<NavCubit>(context).changeScreen(index: index);
-        if (index == 4) {}
-      },
+      onTap: () => navCubit.changeScreen(index: index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.blueAccent.withOpacity(0.1)
-              : Colors.transparent,
+          color: isSelected ? Colors.blueAccent.withOpacity(0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Image.asset(
@@ -112,80 +86,97 @@ class Navbar extends StatelessWidget {
   }
 
   Widget _buildAddButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        final navCubit = context.read<NavCubit>();
+    return BlocBuilder<AddMedicineCubit, AddMedicineState>(
+      builder: (context, state) {
         final addCubit = context.read<AddMedicineCubit>();
-        if (navCubit.currentIndex != 2) {
-          addCubit.addMedicineChanger(newIndex: 0);
-          navCubit.changeScreen(index: 2);
-        } else {
-          int nextIndex = addCubit.isPage + 1;
-          print(nextIndex);
-          if (nextIndex <= 3) {
-            addCubit.addMedicineChanger(newIndex: nextIndex);
-            if(context.read<AddMedicineCubit>().namePageKey.currentState!.validate()){
-              print("===========><========");
-            }
-          } else {
-            firestore
-                .collection("user_medicines")
-                .doc(FirebaseAuth.instance.currentUser!.uid)
-                .set({
-                  "medicine_name": context
-                      .read<AddMedicineCubit>()
-                      .medicineName
-                      .text,
-                  "special_instructions": context
-                      .read<AddMedicineCubit>()
-                      .specialInstructions
-                      .text,
-                  "assign_to_who": context
-                      .read<AddMedicineCubit>()
-                      .assignTo
-                      .text,
-                  "medicine_type": context
-                      .read<AddMedicineCubit>()
-                      .selectedType,
-                  "dosage": context.read<AddMedicineCubit>().dosage.text,
-                  "duration_in_days": context.read<AddMedicineCubit>().duration,
-                  "custom_day": context.read<AddMedicineCubit>().notifyMe,
-                  "custom_times": context
-                      .read<AddMedicineCubit>()
-                      .reminderTimes.map((e)=> e.toMap()).toList(),
-                }, SetOptions(merge: true));
-            print(context.read<AddMedicineCubit>().medicineName.text);
-            print(context.read<AddMedicineCubit>().specialInstructions.text);
-            print(context.read<AddMedicineCubit>().assignTo.text);
-            print(context.read<AddMedicineCubit>().selectedType);
-            print(context.read<AddMedicineCubit>().dosage.text);
-            print(context.read<AddMedicineCubit>().reminderTimes);
-            addCubit.isPage = 0;
-            navCubit.changeScreen(index: 0);
-            context.read<AddMedicineCubit>().reminderTimes.clear();
-            context.read<AddMedicineCubit>().uiRows.clear();
+        final navCubit = context.read<NavCubit>();
+        final bool isInAddFlow = navCubit.currentIndex == 2;
 
-          }
-        }
-      },
-      child: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          color: Colors.blueAccent,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.blueAccent.withOpacity(0.4),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+        final bool canProceed = state is AddMedicineInProgress ? addCubit.canGoNext : true;
+        final int currentPage = state is AddMedicineInProgress ? state.currentPage : 0;
+        final bool isLastPage = currentPage == 3;
+
+        return GestureDetector(
+          onTap: () async {
+            if (!isInAddFlow) {
+              addCubit.reset();
+              navCubit.changeScreen(index: 2);
+              return;
+            }
+
+            if (!canProceed && !isLastPage) {
+              // لما تضغط وهو (…) → ما تعملش حاجة خالص
+              return;
+            }
+
+            if (isLastPage) {
+              // حفظ الدواء
+              try {
+                final rawTimes = addCubit.uiRows.map((row) {
+                  return {
+                    'hour': row.hour.trim(),
+                    'minute': row.minute.trim().padLeft(2, '0'),
+                    'period': row.period,
+                  };
+                }).toList();
+
+                await UserMedicineService().addUserMedicine(
+                  medicineName: addCubit.medicineName.text.trim(),
+                  specialInstructions: addCubit.specialInstructions.text,
+                  assignToWho: addCubit.assignTo.text,
+                  medicineType: addCubit.selectedType,
+                  dosage: addCubit.dosage.text.trim(),
+                  durationInDays: addCubit.duration,
+                  customDay: addCubit.notifyMe,
+                  customTimes: rawTimes,
+                );
+
+                addCubit.reset();
+                navCubit.changeScreen(index: 0);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Medicine added successfully!"), backgroundColor: Colors.green),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
+                );
+              }
+              return;
+            }
+
+            // لو تمام → روح للصفحة الجاية
+            addCubit.goNext();
+          },
+          child: Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: Colors.blueAccent,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blueAccent.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: BlocProvider.of<NavCubit>(context).currentIndex == 2
-            ? Center(child: Image.asset(AppImages.addWaitingIcon, width: 28))
-            : Center(child: Image.asset(AppImages.addScreenIcon, width: 17)),
-      ),
+            child: Center(
+              child: isInAddFlow
+                  ? (canProceed
+                  ? (isLastPage
+                  ? const Icon(Icons.check, color: Colors.white, size: 28)
+                  : const Icon(Icons.arrow_forward, color: Colors.white, size: 24))
+                  : const Text(
+                "...",
+                style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+              ))
+                  : Image.asset(AppImages.addScreenIcon, width: 17, color: Colors.white),
+            ),
+          ),
+        );
+      },
     );
   }
 }

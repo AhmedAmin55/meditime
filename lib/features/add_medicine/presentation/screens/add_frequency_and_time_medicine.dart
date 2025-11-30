@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meditime/features/add_medicine/presintation/widgets/screen_info.dart';
-
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
@@ -9,42 +7,43 @@ import '../../../../core/constants/app_textstyle.dart';
 import '../../../../core/widgets/primary_appbar.dart';
 import '../../business_logic/add_medicine_cubit/add_medicine_cubit.dart';
 import '../widgets/add_page_return_icon.dart';
-import '../widgets/custom_input_field.dart';
 import '../widgets/customize_days_widget.dart';
 import '../widgets/durationinputField.dart';
 import '../widgets/progress_bar.dart';
 import '../widgets/reminder_times_widget.dart';
+import '../widgets/screen_info.dart';
 
 class AddFrequencyAndTimeMedicineState extends StatelessWidget {
-  final TextEditingController _durationController = TextEditingController();
-  String _selectedUnit = "days";
-  final _formKey = GlobalKey<FormState>();
+  const AddFrequencyAndTimeMedicineState({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<AddMedicineCubit>();
 
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    // أول ما تدخل الصفحة نضمن إن فيه سطر وقت واحد على الأقل
+    if (cubit.uiRows.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        cubit.addEmptyReminder();
+      });
+    }
+
     return PopScope(
       canPop: false,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Header
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
                     PrimaryAppbar(
                       title: AppTexts.addMedicationForYourselfOrFriends,
-                      titleStyle: AppTextsStyle.poppinsMedium20(
-                        context,
-                      ).copyWith(fontSize: 15),
+                      titleStyle: AppTextsStyle.poppinsMedium20(context).copyWith(fontSize: 15),
                       subtitle: AppTexts.hopeToGetBetterSoon,
-                      subtitleStyle: AppTextsStyle.poppinsBold15(
-                        context,
-                      ).copyWith(fontSize: 10, color: AppColors.timeColor),
+                      subtitleStyle: AppTextsStyle.poppinsBold15(context).copyWith(fontSize: 10, color: AppColors.timeColor),
                       imagePath: AppImages.logo,
                     ),
                     const SizedBox(height: 8),
@@ -53,54 +52,43 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
+
+              // الجسم
               Expanded(
                 child: Container(
-                  height: height,
-                  width: width,
-                  margin: EdgeInsets.only(top: 10, right: 12, left: 12),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.addBackground,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12),
-                    ),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                   ),
-                  child: Column(
-                    children: [
-                      const AddPageReturnIcon(),
-                      SizedBox(height: 20),
-                      ScreenInfo(
-                        imagePath: AppImages.medicineFrequencyScreenIcon,
-                        title: AppTexts.frequencyAndTime,
-                        subtitle: AppTexts.howOftenDoYouTakeThis,
-                      ),
-                      SizedBox(height: 20),
-                      Expanded(
-                        child: Form(
-                          key: _formKey,
-                          child: ListView(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20,
-                            ),
-                            children: [
-                              // ===== Duration Input Field =====
-                              DurationInputField(
-                                numberController: _durationController,
-                                selectedUnit: _selectedUnit,
-                                onUnitChanged: (value) {
-                                  _selectedUnit = value ?? "days";
-                                },
-                              ),
-                              SizedBox(height: 20,),
-                              const CustomizeDaysWidget(),
-                              const SizedBox(height: 20),
-                              // ===== Reminder Times =====
-                              const ReminderTimesWidget(),
-                            ],
-                          ),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        const AddPageReturnIcon(),
+                        const SizedBox(height: 20),
+                        ScreenInfo(
+                          imagePath: AppImages.medicineFrequencyScreenIcon,
+                          title: AppTexts.frequencyAndTime,
+                          subtitle: AppTexts.howOftenDoYouTakeThis,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 20),
+
+                        // Duration + Unit
+                        DurationInputField(),
+
+                        const SizedBox(height: 20),
+
+                        // Notify Me
+                        const CustomizeDaysWidget(),
+
+                        const SizedBox(height: 30),
+
+                        // Reminder Times
+                        const ReminderTimesWidget(),
+
+                        const SizedBox(height: 120),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -111,7 +99,6 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
     );
   }
 }
-
 // Expanded(
 //   child: Stack(
 //     children: [

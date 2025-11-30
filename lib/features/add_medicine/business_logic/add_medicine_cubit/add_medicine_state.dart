@@ -1,13 +1,13 @@
 part of 'add_medicine_cubit.dart';
 
 @immutable
-sealed class AddMedicineState {}
+abstract class AddMedicineState {}
 
-final class AddMedicineInitial extends AddMedicineState {}
-final class AddMedicineDosage extends AddMedicineState {}
-final class AddMedicineFrequency extends AddMedicineState {
- final List reminderTimes;
+class AddMedicineInitial extends AddMedicineState {}
 
-  AddMedicineFrequency({required this.reminderTimes});
+class AddMedicineInProgress extends AddMedicineState {
+ final int currentPage;
+ final List<ReminderModel> uiRows;
+
+ AddMedicineInProgress({required this.currentPage, required this.uiRows});
 }
-final class AddMedicineReview extends AddMedicineState {}
