@@ -1,6 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import 'package:meditime/features/home/presintation/widgets/no_found_age.dart';
 import '../../../../core/business_logic/user_cubit/user_cubit.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -9,7 +13,7 @@ import '../../../../core/constants/app_textstyle.dart';
 import 'medication_status.dart';
 
 class UserCard extends StatelessWidget {
- const UserCard({super.key});
+  const UserCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +60,6 @@ class UserCard extends StatelessWidget {
                             ),
                             const SizedBox(height: 5),
                             if (state.user.age != null) ...[
-                              // const SizedBox(height: 5),
                               Text(
                                 "${state.user.age} years old",
                                 style: AppTextsStyle.poppinsRegular25(context)
@@ -140,7 +143,6 @@ class UserCard extends StatelessWidget {
                                 AppImages.facebookIcon,
                               ),
                               backgroundColor: Colors.blue.shade200,
-                              // child: Image.asset(AppImages.logo,fit: BoxFit.fill,),
                             ),
                           );
                         }),

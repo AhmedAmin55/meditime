@@ -1,5 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_textstyle.dart';
@@ -8,19 +10,14 @@ import '../../../../core/models/medicine_model.dart';
 class HomeMedicineCard extends StatelessWidget {
   final MedicineModel medicine;
 
-  const HomeMedicineCard({
-    super.key,
-    required this.medicine,
-  });
+  const HomeMedicineCard({super.key, required this.medicine});
 
-  // عرض أول موعد بس
   String _getReminderTime() {
     if (medicine.reminderTimes.isEmpty) return "لا يوجد وقت";
     final first = medicine.reminderTimes.first;
     return "${first.hour.padLeft(2, '0')}:${first.minute.padLeft(2, '0')} ${first.period}";
   }
 
-  // نستخدم currentStatus اللي في الموديل (المحسوبة من reminder_times_status)
   Color _getStatusColor() {
     switch (medicine.currentStatus.toLowerCase()) {
       case "missed":
@@ -71,7 +68,6 @@ class HomeMedicineCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // TIME ROW
               Row(
                 children: [
                   Image.asset(
@@ -82,21 +78,20 @@ class HomeMedicineCard extends StatelessWidget {
                   const SizedBox(width: 4),
                   Text(
                     _getReminderTime(),
-                    style: AppTextsStyle.poppinsMedium20(context)
-                        .copyWith(fontSize: 13, color: AppColors.timeColor),
+                    style: AppTextsStyle.poppinsMedium20(
+                      context,
+                    ).copyWith(fontSize: 13, color: AppColors.timeColor),
                   ),
                 ],
               ),
               const SizedBox(height: 6),
 
-              // MEDICINE NAME
               Text(
                 medicine.medicineName,
                 style: AppTextsStyle.spaceGroteskMedium22(context),
               ),
               const SizedBox(height: 4),
 
-              // DOSAGE + TYPE + INSTRUCTIONS
               Padding(
                 padding: const EdgeInsets.only(left: 5),
                 child: Column(
@@ -104,18 +99,22 @@ class HomeMedicineCard extends StatelessWidget {
                   children: [
                     RichText(
                       text: TextSpan(
-                        style: const TextStyle(color: AppColors.numberOfCapsuleColor),
+                        style: const TextStyle(
+                          color: AppColors.numberOfCapsuleColor,
+                        ),
                         children: [
                           TextSpan(
                             text: medicine.dosage,
-                            style: AppTextsStyle.spaceGroteskRegular13(context)
-                                .copyWith(fontSize: 15),
+                            style: AppTextsStyle.spaceGroteskRegular13(
+                              context,
+                            ).copyWith(fontSize: 15),
                           ),
                           if (medicine.medicineType.isNotEmpty)
                             TextSpan(
                               text: " (${medicine.medicineType})",
-                              style: AppTextsStyle.spaceGroteskRegular13(context)
-                                  .copyWith(fontSize: 12),
+                              style: AppTextsStyle.spaceGroteskRegular13(
+                                context,
+                              ).copyWith(fontSize: 12),
                             ),
                         ],
                       ),
@@ -125,7 +124,10 @@ class HomeMedicineCard extends StatelessWidget {
                       Text(
                         medicine.specialInstructions,
                         style: AppTextsStyle.spaceGroteskRegular13(context)
-                            .copyWith(fontSize: 12, color: AppColors.numberOfCapsuleColor),
+                            .copyWith(
+                              fontSize: 12,
+                              color: AppColors.numberOfCapsuleColor,
+                            ),
                       ),
                     ],
                   ],
@@ -135,7 +137,6 @@ class HomeMedicineCard extends StatelessWidget {
           ),
           const Spacer(),
 
-          // STATUS (الآن يعتمد على currentStatus)
           Row(
             children: [
               Icon(
@@ -145,9 +146,10 @@ class HomeMedicineCard extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                medicine.currentStatus.capitalize(), // Taken / Missed / Waiting
-                style: AppTextsStyle.poppinsRegular25(context)
-                    .copyWith(fontSize: 15, color: _getStatusColor()),
+                medicine.currentStatus.capitalize(),
+                style: AppTextsStyle.poppinsRegular25(
+                  context,
+                ).copyWith(fontSize: 15, color: _getStatusColor()),
               ),
             ],
           ),
@@ -157,7 +159,6 @@ class HomeMedicineCard extends StatelessWidget {
   }
 }
 
-// عشان أول حرف كابيتال
 extension StringExtension on String {
   String capitalize() {
     if (isEmpty) return this;

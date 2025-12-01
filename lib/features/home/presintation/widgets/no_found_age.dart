@@ -1,18 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// Project imports:
 import '../../../../core/business_logic/user_cubit/user_cubit.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_textstyle.dart';
 
 class NoFoundAge extends StatelessWidget {
-   NoFoundAge({super.key});
+  NoFoundAge({super.key});
+
   DateTime pickedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    return   GestureDetector(
+    return GestureDetector(
       onTap: () {
         showDialog(
           context: context,
@@ -27,8 +32,7 @@ class NoFoundAge extends StatelessWidget {
         ).then((value) {
           if (value != null) {
             pickedDate = value;
-            var userAge =
-                DateTime.now().year - pickedDate.year;
+            var userAge = DateTime.now().year - pickedDate.year;
             print(pickedDate);
             print(userAge);
             context.read<UserCubit>().updateAge(
@@ -40,11 +44,9 @@ class NoFoundAge extends StatelessWidget {
       },
       child: Text(
         "Tap here to add your age",
-        style: AppTextsStyle.poppinsRegular25(context)
-            .copyWith(
-          fontSize: 14,
-          color: AppColors.ageColor,
-        ),
+        style: AppTextsStyle.poppinsRegular25(
+          context,
+        ).copyWith(fontSize: 14, color: AppColors.ageColor),
       ),
     );
   }

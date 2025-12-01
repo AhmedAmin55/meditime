@@ -1,5 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import 'package:meditime/features/add_medicine/business_logic/add_medicine_cubit/add_medicine_cubit.dart';
 import 'package:meditime/features/add_medicine/presentation/screens/add_dosage_and_type_medicine.dart';
 import 'package:meditime/features/add_medicine/presentation/screens/add_frequency_and_time_medicine.dart';
@@ -27,7 +32,7 @@ class AddMedicineFlowScreen extends StatelessWidget {
               return AddNameMedicine();
           }
         }
-        // لو Initial أو أي حالة تانية
+
         return AddNameMedicine();
       },
     );

@@ -1,8 +1,9 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_texts.dart';
-import '../../../../core/constants/app_textstyle.dart';
 
 class CustomShowBottomSheet extends StatefulWidget {
   const CustomShowBottomSheet({
@@ -37,10 +38,7 @@ class _CustomShowBottomSheetState extends State<CustomShowBottomSheet> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.photo_camera_back_outlined, size: 30),
-                  Text(
-                    AppTexts.gallery,
-
-                  ),
+                  Text(AppTexts.gallery),
                 ],
               ),
             ),
@@ -59,10 +57,7 @@ class _CustomShowBottomSheetState extends State<CustomShowBottomSheet> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.add_a_photo_outlined, size: 30),
-                  Text(
-                    AppTexts.camera,
-
-                  ),
+                  Text(AppTexts.camera),
                 ],
               ),
             ),

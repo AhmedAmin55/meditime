@@ -1,9 +1,13 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:meditime/core/constants/app_images.dart';
 import 'package:meditime/core/constants/app_texts.dart';
 
 class AddHeader extends StatelessWidget {
   const AddHeader({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -13,14 +17,10 @@ class AddHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-               AppTexts.addMedicationForYourselfOrFriends,
-              ),
+              Text(AppTexts.addMedicationForYourselfOrFriends),
               Padding(
                 padding: const EdgeInsets.only(left: 8, top: 4),
-                child: Text(
-                  AppTexts.hopeToGetBetterSoon,
-                ),
+                child: Text(AppTexts.hopeToGetBetterSoon),
               ),
             ],
           ),

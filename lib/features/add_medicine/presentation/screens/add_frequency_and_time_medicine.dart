@@ -1,5 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
@@ -20,7 +25,6 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<AddMedicineCubit>();
 
-    // أول ما تدخل الصفحة نضمن إن فيه سطر وقت واحد على الأقل
     if (cubit.uiRows.isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         cubit.addEmptyReminder();
@@ -34,16 +38,19 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: [
-              // Header
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
                     PrimaryAppbar(
                       title: AppTexts.addMedicationForYourselfOrFriends,
-                      titleStyle: AppTextsStyle.poppinsMedium20(context).copyWith(fontSize: 15),
+                      titleStyle: AppTextsStyle.poppinsMedium20(
+                        context,
+                      ).copyWith(fontSize: 15),
                       subtitle: AppTexts.hopeToGetBetterSoon,
-                      subtitleStyle: AppTextsStyle.poppinsBold15(context).copyWith(fontSize: 10, color: AppColors.timeColor),
+                      subtitleStyle: AppTextsStyle.poppinsBold15(
+                        context,
+                      ).copyWith(fontSize: 10, color: AppColors.timeColor),
                       imagePath: AppImages.logo,
                     ),
                     const SizedBox(height: 8),
@@ -57,7 +64,10 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
                 child: Container(
                   decoration: const BoxDecoration(
                     color: AppColors.addBackground,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12),
+                    ),
                   ),
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(20),
@@ -72,17 +82,14 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
 
-                        // Duration + Unit
                         DurationInputField(),
 
                         const SizedBox(height: 20),
 
-                        // Notify Me
                         const CustomizeDaysWidget(),
 
                         const SizedBox(height: 30),
 
-                        // Reminder Times
                         const ReminderTimesWidget(),
 
                         const SizedBox(height: 120),
@@ -98,47 +105,3 @@ class AddFrequencyAndTimeMedicineState extends StatelessWidget {
     );
   }
 }
-// Expanded(
-//   child: Stack(
-//     children: [
-//       const AddPageBackground(),
-//       SingleChildScrollView(
-//         child: Padding(
-//           padding: const EdgeInsets.symmetric(horizontal: 24),
-//           child: Column(
-//             children: [
-//               const SizedBox(height: 90),
-//               ScreenInfo(
-//                 imagePath: AppImages.medicineFrequencyScreenIcon,
-//                 title: AppTexts.frequencyAndTime,
-//                 subtitle: AppTexts.howOftenDoYouTakeThis,
-//               ),
-//               const SizedBox(height: 32),
-//               // ===== Duration Input Field =====
-//               DurationInputField(
-//                 numberController: _durationController,
-//                 selectedUnit: _selectedUnit,
-//                 onUnitChanged: (value) {
-//                   setState(() {
-//                     _selectedUnit = value ?? "days";
-//                   });
-//                 },
-//               ),
-//
-//               const SizedBox(height: 20),
-//
-//               // ===== Customize Days =====
-//               const CustomizeDaysWidget(),
-//
-//               const SizedBox(height: 20),
-//
-//               // ===== Reminder Times =====
-//               const ReminderTimesWidget(),
-//               const SizedBox(height: 40),
-//             ],
-//           ),
-//         ),
-//       ),
-//     ],
-//   ),
-// ),

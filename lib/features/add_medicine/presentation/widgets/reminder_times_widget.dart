@@ -1,5 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import 'package:meditime/core/constants/app_colors.dart';
 import '../../business_logic/add_medicine_cubit/add_medicine_cubit.dart';
 import 'custom_input_field.dart';
@@ -26,7 +31,6 @@ class ReminderTimesWidget extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 12),
             child: Row(
               children: [
-                // Time Input
                 Container(
                   width: width * 0.55,
                   height: height * 0.06,
@@ -45,7 +49,8 @@ class ReminderTimesWidget extends StatelessWidget {
                         formWidth: 40,
                         formHeight: 40,
                         horPadding: 5,
-                        verPadding: 0,            enableBorder: true,
+                        verPadding: 0,
+                        enableBorder: true,
 
                         hint: reminder.hour.isEmpty ? "08" : reminder.hour,
                         onChange: (v) => cubit.updateHour(index, v ?? ""),
@@ -55,7 +60,8 @@ class ReminderTimesWidget extends StatelessWidget {
                         formWidth: 40,
                         formHeight: 40,
                         horPadding: 5,
-                        verPadding: 0,            enableBorder: true,
+                        verPadding: 0,
+                        enableBorder: true,
 
                         hint: reminder.minute.isEmpty ? "00" : reminder.minute,
                         onChange: (v) => cubit.updateMinute(index, v ?? ""),
@@ -85,7 +91,7 @@ class ReminderTimesWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 20),
-                // Delete
+
                 InkWell(
                   onTap: () => cubit.removeUiRow(index),
                   child: Container(
@@ -111,7 +117,7 @@ class ReminderTimesWidget extends StatelessWidget {
           );
         }),
         const SizedBox(height: 16),
-        // Add Button
+
         GestureDetector(
           onTap: cubit.addEmptyReminder,
           child: Container(

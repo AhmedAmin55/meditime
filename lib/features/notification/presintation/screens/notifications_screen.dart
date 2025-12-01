@@ -1,4 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+// Project imports:
 import 'package:meditime/core/constants/app_images.dart';
 import 'package:meditime/core/constants/app_texts.dart';
 import 'package:meditime/core/constants/app_textstyle.dart';
@@ -9,6 +15,9 @@ import '../../data/models/notification_model.dart';
 import '../widgets/notification_card.dart';
 
 class NotificationsScreen extends StatelessWidget {
+  NotificationsScreen({super.key, this.message});
+
+  final RemoteMessage? message;
   final List<AppNotification> _items = [
     AppNotification(
       title: 'Medicine Due now',
@@ -77,7 +86,7 @@ class NotificationsScreen extends StatelessWidget {
             SizedBox(height: 30),
             Expanded(
               child: Container(
-                padding: EdgeInsets.only(top: 10,right: 10,left: 10),
+                padding: EdgeInsets.only(top: 10, right: 10, left: 10),
                 color: AppColors.scaffoldColor,
                 child: ListView.builder(
                   itemCount: _items.length,

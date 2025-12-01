@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:meditime/core/constants/app_colors.dart';
 
 class Summary extends StatelessWidget {
@@ -38,8 +41,8 @@ class Summary extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Container(
-            height: height*0.35,
-            width:width ,
+            height: height * 0.35,
+            width: width,
             decoration: BoxDecoration(
               color: AppColors.addBackground,
               borderRadius: BorderRadius.circular(10),
@@ -53,7 +56,7 @@ class Summary extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    width: width*0.451,
+                    width: width * 0.451,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 14,
                       vertical: 29,
@@ -86,9 +89,11 @@ class Summary extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
+                        ),
                         border: Border.all(
-                          color:AppColors.medicineBorderColor,
+                          color: AppColors.medicineBorderColor,
                           width: 0.5,
                         ),
                         boxShadow: [
@@ -122,12 +127,10 @@ class Summary extends StatelessWidget {
     );
   }
 
-  // ===== Helper for Label Text =====
   Widget _buildLabel(String label) {
     return Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[600]));
   }
 
-  // ===== Helper for Value Text =====
   Widget _buildValue(String value) {
     return Text(
       value,

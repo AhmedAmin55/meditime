@@ -1,37 +1,14 @@
-
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import '../../../../core/business_logic/medicine_cubit/medicine_cubit.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/models/medicine_model.dart';
-import '../../business_logic_layer/days_cubit/days_cubit.dart';
-import '../widgets/calendar_header.dart';
-import '../widgets/calendar_medicine_card.dart';
-import '../widgets/calendar_section.dart';
-import '../widgets/progress.dart';
-// lib/features/calendar/presentation/screens/calendar_screen.dart
-
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-
-import '../../../../core/business_logic/medicine_cubit/medicine_cubit.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/models/medicine_model.dart';
-import '../../business_logic_layer/days_cubit/days_cubit.dart';
-import '../widgets/calendar_header.dart';
-import '../widgets/calendar_medicine_card.dart';
-import '../widgets/calendar_section.dart';
-import '../widgets/progress.dart';
-
-// lib/features/calendar/presentation/screens/calendar_screen.dart
-
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
-
-import '../../../../core/business_logic/medicine_cubit/medicine_cubit.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_texts.dart';
+import '../../../../core/constants/app_textstyle.dart';
 import '../../../../core/models/medicine_model.dart';
 import '../../business_logic_layer/days_cubit/days_cubit.dart';
 import '../widgets/calendar_header.dart';
@@ -58,49 +35,55 @@ class _CalendarScreenState extends State<CalendarScreen> {
             const CalendarHeader(),
             const ProgressSection(),
             const SizedBox(height: 20),
+
+            // التقويم دايمًا ظاهر (مش هنخفيه)
             const CalendarSection(),
+
+            // السهم بس بيعمل toggle للحالة (حتى لو مش بنستخدمها دلوقتي في الـ UI)
             GestureDetector(
-              onTap: () => context.read<DaysCubit>().changeCalendarState(),
-              child: const Center(child: Icon(Icons.keyboard_arrow_down)),
+              onTap: () => context.read<DaysCubit>().toggleCalendar(),
+              child: const Center(
+                child: Icon(Icons.keyboard_arrow_down),
+              ),
             ),
             const SizedBox(height: 20),
 
-            // ==================== جرعات اليوم المختار ====================
+            // قايمة الأدوية حسب اليوم المختار
             Expanded(
-              child: BlocBuilder<DaysCubit, DateTime>(
-                builder: (context, selectedDate) {
-                  // اليوم المختار بدون وقت
-                  final selectedDay = DateTime(
-                    selectedDate.year,
-                    selectedDate.month,
-                    selectedDate.day,
-                  );
+              child: BlocBuilder<DaysCubit, DaysState>(
+                builder: (context, daysState) {
+                  // نجيب التاريخ المختار من الـ state الجديد
+                  final selectedDay = daysState.selectedDate;
 
-                  // جلب كل الأدوية
-                  final List<MedicineModel> allMedicines = context.read<MedicineCubit>().state is MedicineLoaded
-                      ? (context.read<MedicineCubit>().state as MedicineLoaded).medicines
+                  final List<MedicineModel> allMedicines =
+                  context.read<MedicineCubit>().state is MedicineLoaded
+                      ? (context.read<MedicineCubit>().state as MedicineLoaded)
+                      .medicines
                       : <MedicineModel>[];
 
-                  // الفلترة السحرية: أي دواء عنده جرعة في هذا اليوم بالضبط
                   final List<MedicineModel> todayMedicines = allMedicines.where((med) {
                     return med.reminderTimesStatus.any((status) {
                       final reminderDate = status.reminderTime.toDate();
-                      final reminderDay = DateTime(reminderDate.year, reminderDate.month, reminderDate.day);
+                      final reminderDay = DateTime(
+                        reminderDate.year,
+                        reminderDate.month,
+                        reminderDate.day,
+                      );
                       return reminderDay == selectedDay;
                     });
                   }).toList();
 
-                  // لو مفيش جرعات اليوم
                   if (todayMedicines.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Text(
-                        "لا توجد جرعات في هذا اليوم",
-                        style: TextStyle(fontSize: 17, color: Colors.grey),
+                        AppTexts.noMedicinesForThisDay,
+                        style: AppTextsStyle.poppinsRegular25(context)
+                            .copyWith(fontSize: 20),
                       ),
                     );
                   }
 
-                  // ترتيب الجرعات حسب الوقت في اليوم المختار
+                  // ترتيب الأدوية حسب الوقت
                   todayMedicines.sort((a, b) {
                     final timeA = a.reminderTimesStatus
                         .where((s) => s.reminderTime.toDate().day == selectedDay.day)

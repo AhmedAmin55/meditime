@@ -1,5 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
 import '../../../../core/constants/app_colors.dart';
 
 class ProgressSection extends StatelessWidget {
@@ -21,8 +23,10 @@ class ProgressSection extends StatelessWidget {
             value: 1 / 5,
             minHeight: 5,
             borderRadius: BorderRadius.circular(10),
-            backgroundColor:AppColors.progressIndicatorBackgroundColor ,
-            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.splashScreenColor),
+            backgroundColor: AppColors.progressIndicatorBackgroundColor,
+            valueColor: const AlwaysStoppedAnimation<Color>(
+              AppColors.splashScreenColor,
+            ),
           ),
         ],
       ),

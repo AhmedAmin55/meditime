@@ -1,8 +1,11 @@
+// Dart imports:
 import 'dart:io';
 
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+// Project imports:
 import '../models/user_model.dart';
 
 class UserService {
@@ -17,6 +20,7 @@ class UserService {
     if (!doc.exists) return null;
     return UserModel.fromMap(doc.data()!);
   }
+
   Future<void> updateProfilePhoto(String uid, File file) async {
     try {
       print("Uploading file: ${file.path}");

@@ -1,8 +1,9 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:meditime/core/constants/app_textstyle.dart';
-
 import '../../../../core/constants/app_colors.dart';
-
 
 class ScreenInfo extends StatelessWidget {
   final String imagePath;
@@ -23,38 +24,15 @@ class ScreenInfo extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          // Container(
-          //   width: 77,
-          //   height: 77,
-          //   decoration: BoxDecoration(
-          //     color: Colors.white,
-          //     borderRadius: BorderRadius.circular(13),
-          //     boxShadow: [
-          //       BoxShadow(
-          //         color: AppColors.black.withOpacity(0.25),
-          //         blurRadius: 2,
-          //         offset: const Offset(1, 1),
-          //       ),
-          //     ],
-          //   ),
-          //   child: Padding(
-          //     padding: const EdgeInsets.only(top: 8.0, left: 8),
-          //     child:
-          //   ),
-          // ),
-          Image.asset(imagePath,width: width*0.25,),
+          Image.asset(imagePath, width: width * 0.25),
           const SizedBox(height: 12),
-           Text(
-            title,
-             style: AppTextsStyle.montserratSemiBold22(context),
-          ),
+          Text(title, style: AppTextsStyle.montserratSemiBold22(context)),
           const SizedBox(height: 6),
           Text(
             subtitle,
-            style: AppTextsStyle.montserratSemiBold22(context).copyWith(
-              color: AppColors.timeColor,
-              fontSize: 13
-            ),
+            style: AppTextsStyle.montserratSemiBold22(
+              context,
+            ).copyWith(color: AppColors.timeColor, fontSize: 13),
             textAlign: TextAlign.center,
           ),
         ],

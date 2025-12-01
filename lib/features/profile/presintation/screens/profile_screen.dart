@@ -1,19 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import 'package:meditime/core/constants/app_colors.dart';
-import 'package:meditime/core/constants/app_images.dart';
 import 'package:meditime/core/constants/app_texts.dart';
 import 'package:meditime/core/constants/app_textstyle.dart';
-import 'package:meditime/core/utils/app_validators.dart';
-import 'package:meditime/core/widgets/custom_textformfield.dart';
 import 'package:meditime/features/profile/presintation/widgets/change_profile_name_dialog.dart';
 import 'package:meditime/features/profile/presintation/widgets/container_do_some_thing.dart';
 import 'package:meditime/features/profile/presintation/widgets/user_image.dart';
-
 import '../../../../core/business_logic/nav_cubit/nav_cubit.dart';
 import '../../../../core/business_logic/user_cubit/user_cubit.dart';
-import '../../../../core/widgets/primary_button.dart';
 import '../../../auth/presintation/screens/authentication_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -27,14 +27,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _nameController = TextEditingController();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _nameController.dispose();
   }
@@ -125,10 +123,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               builder: (_) => AuthenticationScreen(),
                             ),
                             (route) => false,
-
                           );
                           context.read<NavCubit>().changeScreen(index: 0);
-
                         },
                       ),
                     ],

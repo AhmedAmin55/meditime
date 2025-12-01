@@ -1,12 +1,13 @@
-import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:meditime/features/profile/presintation/widgets/custom_show_bottom_sheet.dart';
 
+// Project imports:
+import 'package:meditime/features/profile/presintation/widgets/custom_show_bottom_sheet.dart';
 import '../../../../core/business_logic/user_cubit/user_cubit.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';

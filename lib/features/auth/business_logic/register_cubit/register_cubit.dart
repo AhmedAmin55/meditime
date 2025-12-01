@@ -1,7 +1,9 @@
+// Package imports:
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 
+// Project imports:
 import '../../../../core/constants/app_texts.dart';
 import '../../../../core/models/user_model.dart';
 import '../../../../core/repo/user_repo.dart';
@@ -22,13 +24,11 @@ class RegisterCubit extends Cubit<RegisterState> {
   }) async {
     emit(RegisterLoading());
     try {
-      // 1️⃣ تسجيل المستخدم في Firebase Auth
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
 
       final uid = userCredential.user!.uid;
 
-      // 2️⃣ إنشاء نموذج المستخدم بدون age
       final newUser = UserModel(
         uid: uid,
         name: name,
@@ -36,10 +36,8 @@ class RegisterCubit extends Cubit<RegisterState> {
         phoneNumber: phoneNumber,
       );
 
-      // 3️⃣ إضافة البيانات إلى Firestore عبر الـ Repo
-
       await userRepo.registerUser(newUser);
-      emit(RegisterSuccess(uid: uid)); // مرر الـ uid هنا
+      emit(RegisterSuccess(uid: uid));
     } on FirebaseAuthException catch (e) {
       if (e.code == "email-already-in-use") {
         emit(RegisterFailure(errorMessage: AppTexts.emailAlreadyExist));

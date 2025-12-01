@@ -1,12 +1,15 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meditime/core/repo/user_repo.dart';
+
+// Project imports:
 import 'package:meditime/features/home/presintation/widgets/user_card.dart';
 import '../../../../core/business_logic/user_cubit/user_cubit.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
 import '../../../../core/constants/app_textstyle.dart';
-import '../../../../core/services/user_service.dart';
 import '../../../../core/widgets/primary_appbar.dart';
 
 class HomeScreenHeader extends StatelessWidget {

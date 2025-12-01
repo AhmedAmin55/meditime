@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import '../constants/app_colors.dart';
 
 class CustomTextformfield extends StatefulWidget {
@@ -36,43 +39,43 @@ class _CustomTextformfieldState extends State<CustomTextformfield> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    // return Container(
-    //   padding: EdgeInsets.all(15),
-    //   height: height*0.06,
-    //   decoration: BoxDecoration(
-    //     color: AppColors.white,
-    //     borderRadius: BorderRadius.circular(15),
-    //     border: Border.all(width: 0.1, color: AppColors.waitingMedicineColor),
-    //     boxShadow: [
-    //       const BoxShadow(
-    //         color: Colors.white,
-    //         offset: Offset(-3, -3),
-    //         blurRadius: 6,
-    //       ),
-    //       BoxShadow(
-    //         color: Colors.black.withOpacity(0.2),
-    //         offset: const Offset(3, 3),
-    //         blurRadius: 6,
-    //       ),
-    //     ],
-    //   ),
-    //   child: TextFormField(
-    //     validator:validator,
-    //     controller: controller,
-    //     readOnly: readOnly,
-    //     obscureText: obscureText,
-    //     keyboardType:keyboardType ,
-    //     decoration: InputDecoration(
-    //       prefixIconConstraints: BoxConstraints(maxWidth: width*0.05,),
-    //       prefixIcon: Image.asset(prefixIcon,),
-    //       suffixIconConstraints: BoxConstraints(maxWidth: width*0.06,),
-    //       suffixIcon: suffixIcon == null ? null : Image.asset(suffixIcon!),
-    //       hintText: hintText,
-    //       hintStyle: hintTextStyle,
-    //       border: InputBorder.none,
-    //     ),
-    //   ),
-    // );
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     return Material(
       elevation: 2,
       shadowColor: AppColors.waitingMedicineColor.withOpacity(0.5),

@@ -30,6 +30,7 @@ dependencies:
   firebase_auth: ^6.1.1
   modal_progress_hud_nsn: ^0.5.1
   image_picker: ^1.1.2
+  import_sorter: ^4.6.0
 
 dev_dependencies:
   flutter_test:

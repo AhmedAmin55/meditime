@@ -1,8 +1,10 @@
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReminderStatus {
   final Timestamp reminderTime;
-  final String status; // "waiting", "taken", "missed"
+  final String status;
+
   ReminderStatus({required this.reminderTime, required this.status});
 
   factory ReminderStatus.fromMap(Map<String, dynamic> map) {
@@ -13,9 +15,6 @@ class ReminderStatus {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'reminder': reminderTime,
-      'status': status,
-    };
+    return {'reminder': reminderTime, 'status': status};
   }
 }

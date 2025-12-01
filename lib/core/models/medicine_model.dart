@@ -1,10 +1,9 @@
-// models/medicine_model.dart
-
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Project imports:
 import 'package:meditime/core/models/reminder_status.dart';
 import '../../features/add_medicine/data/models/reminder_model.dart';
-
-
 
 class MedicineModel {
   final String id;
@@ -16,18 +15,19 @@ class MedicineModel {
   final String duration;
   final int durationInDays;
   final String customizeDays;
-  final List<ReminderModel> reminderTimes;           // المواعيد الأساسية (08:00 AM, 08:00 PM)
-  final List<ReminderStatus> reminderTimesStatus;    // كل جرعة على مدار الأيام + حالتها
+  final List<ReminderModel> reminderTimes;
+  final List<ReminderStatus> reminderTimesStatus;
   final Timestamp? createdAt;
 
-  // حالة الدواء اليوم (للعرض في الكارت)
   String get currentStatus {
     final now = DateTime.now();
     final todayStart = DateTime(now.year, now.month, now.day);
 
     final todayReminders = reminderTimesStatus.where((r) {
       final date = r.reminderTime.toDate();
-      return date.year == now.year && date.month == now.month && date.day == now.day;
+      return date.year == now.year &&
+          date.month == now.month &&
+          date.day == now.day;
     }).toList();
 
     if (todayReminders.isEmpty) return "waiting";
@@ -36,7 +36,9 @@ class MedicineModel {
     final hasMissed = todayReminders.any((r) => r.status == "missed");
 
     if (hasMissed) return "missed";
-    if (hasTaken && todayReminders.length == todayReminders.where((r) => r.status == "taken").length) {
+    if (hasTaken &&
+        todayReminders.length ==
+            todayReminders.where((r) => r.status == "taken").length) {
       return "taken";
     }
     return "waiting";
@@ -72,13 +74,15 @@ class MedicineModel {
       durationInDays: (json['duration_in_days'] as num?)?.toInt() ?? 30,
       customizeDays: json['custom_day'] ?? 'Everyday',
       createdAt: json['created_at'] as Timestamp?,
-      reminderTimes: reminderList
-          ?.map((e) => ReminderModel.fromMap(e as Map<String, dynamic>))
-          .toList() ??
+      reminderTimes:
+          reminderList
+              ?.map((e) => ReminderModel.fromMap(e as Map<String, dynamic>))
+              .toList() ??
           [],
-      reminderTimesStatus: statusList
-          ?.map((e) => ReminderStatus.fromMap(e as Map<String, dynamic>))
-          .toList() ??
+      reminderTimesStatus:
+          statusList
+              ?.map((e) => ReminderStatus.fromMap(e as Map<String, dynamic>))
+              .toList() ??
           [],
     );
   }
@@ -93,7 +97,9 @@ class MedicineModel {
       'duration_in_days': durationInDays,
       'custom_day': customizeDays,
       'custom_times': reminderTimes.map((r) => r.toMap()).toList(),
-      'reminder_times_status': reminderTimesStatus.map((r) => r.toMap()).toList(),
+      'reminder_times_status': reminderTimesStatus
+          .map((r) => r.toMap())
+          .toList(),
       'created_at': createdAt ?? FieldValue.serverTimestamp(),
     };
   }

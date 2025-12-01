@@ -1,12 +1,16 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import 'package:meditime/features/auth/presintation/widgets/signup_button.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
 import '../../business_logic/auth_switch_cubit/auth_switch_cubit.dart';
 import 'login_button.dart';
-
 
 class AuthenticationScreenHeader extends StatefulWidget {
   const AuthenticationScreenHeader({super.key});
@@ -42,8 +46,8 @@ class _AuthenticationScreenHeaderState
                         context.read<AuthSwitchCubit>().showLogin();
                       },
                       child: state is AuthSwitchInitial
-                          ? LoginButton(title: AppTexts.login,)
-                          : SignupButton(title: AppTexts.login,),
+                          ? LoginButton(title: AppTexts.login)
+                          : SignupButton(title: AppTexts.login),
                     ),
                   ),
                   Expanded(
@@ -52,8 +56,8 @@ class _AuthenticationScreenHeaderState
                         context.read<AuthSwitchCubit>().showSignUp();
                       },
                       child: state is AuthSignUpState
-                          ? LoginButton(title: AppTexts.signup,)
-                          : SignupButton(title: AppTexts.signup,),
+                          ? LoginButton(title: AppTexts.signup)
+                          : SignupButton(title: AppTexts.signup),
                     ),
                   ),
                 ],

@@ -1,5 +1,7 @@
+// Dart imports:
 import 'dart:io';
 
+// Project imports:
 import '../models/user_model.dart';
 import '../services/user_service.dart';
 
@@ -14,8 +16,10 @@ class UserRepo {
 
   Future<void> updatePhoto(String uid, File url) =>
       service.updateProfilePhoto(uid, url);
+
   Future<void> updateName(String uid, String newName) =>
       service.updateName(uid, newName);
+
   Future<void> updateAge(String uid, int newAge) =>
       service.updateAge(uid, newAge);
 }

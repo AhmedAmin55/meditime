@@ -1,15 +1,20 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import 'package:meditime/core/constants/app_colors.dart';
 import 'package:meditime/core/constants/app_images.dart';
 import 'package:meditime/core/constants/app_texts.dart';
 import 'package:meditime/core/constants/app_textstyle.dart';
 import '../../../../core/widgets/primary_appbar.dart';
 import '../../business_logic/add_medicine_cubit/add_medicine_cubit.dart';
-import '../widgets/screen_info.dart';
 import '../widgets/add_page_return_icon.dart';
 import '../widgets/custom_input_field.dart';
 import '../widgets/progress_bar.dart';
+import '../widgets/screen_info.dart';
 
 class AddNameMedicine extends StatelessWidget {
   const AddNameMedicine({super.key});
@@ -29,9 +34,13 @@ class AddNameMedicine extends StatelessWidget {
                 children: [
                   PrimaryAppbar(
                     title: AppTexts.addMedicationForYourselfOrFriends,
-                    titleStyle: AppTextsStyle.poppinsMedium20(context).copyWith(fontSize: 15),
+                    titleStyle: AppTextsStyle.poppinsMedium20(
+                      context,
+                    ).copyWith(fontSize: 15),
                     subtitle: AppTexts.hopeToGetBetterSoon,
-                    subtitleStyle: AppTextsStyle.poppinsBold15(context).copyWith(fontSize: 10, color: AppColors.timeColor),
+                    subtitleStyle: AppTextsStyle.poppinsBold15(
+                      context,
+                    ).copyWith(fontSize: 10, color: AppColors.timeColor),
                     imagePath: AppImages.logo,
                   ),
                   const SizedBox(height: 8),
@@ -63,42 +72,71 @@ class AddNameMedicine extends StatelessWidget {
                         child: ListView(
                           padding: const EdgeInsets.all(16),
                           children: [
-                            const Text("Assign to who", style: TextStyle(fontSize: 15, color: Colors.black54)),
+                            const Text(
+                              "Assign to who",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black54,
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             CustomInputField(
                               controller: cubit.assignTo,
                               hint: "Me",
                               isDropdown: true,
-                              items: ["Me", "Ahmed", "Sara", "Mohamed", "Mariam", "Jomana"],
+                              items: [
+                                "Me",
+                                "Ahmed",
+                                "Sara",
+                                "Mohamed",
+                                "Mariam",
+                                "Jomana",
+                              ],
                               onChange: (value) {
                                 cubit.assignTo.text = value ?? "Me";
                               },
                             ),
                             const SizedBox(height: 20),
 
-                            const Text("Medicine Name", style: TextStyle(fontSize: 15, color: Colors.black54)),
+                            const Text(
+                              "Medicine Name",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black54,
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             CustomInputField(
                               controller: cubit.medicineName,
                               hint: "e.g. Vitamin, Panadol",
                               onChange: (_) {
-                                cubit.emit(AddMedicineInProgress(
-                                  currentPage: cubit.isPage,
-                                  uiRows: List.from(cubit.uiRows),
-                                ));
+                                cubit.emit(
+                                  AddMedicineInProgress(
+                                    currentPage: cubit.isPage,
+                                    uiRows: List.from(cubit.uiRows),
+                                  ),
+                                );
                               },
                               validator: (val) {
-                                if (val == null || val.trim().isEmpty) return "Please enter medicine name";
+                                if (val == null || val.trim().isEmpty)
+                                  return "Please enter medicine name";
                                 return null;
                               },
                             ),
                             const SizedBox(height: 20),
 
-                            const Text("Special Instructions (Optional)", style: TextStyle(fontSize: 15, color: Colors.black54)),
+                            const Text(
+                              "Special Instructions (Optional)",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black54,
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             CustomInputField(
                               controller: cubit.specialInstructions,
-                              hint: "e.g. Take with food, Take on empty stomach",
+                              hint:
+                                  "e.g. Take with food, Take on empty stomach",
                               maxLines: 3,
                             ),
                           ],

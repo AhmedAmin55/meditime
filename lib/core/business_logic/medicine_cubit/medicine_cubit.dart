@@ -1,8 +1,9 @@
+// Package imports:
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
+// Project imports:
 import '../../models/medicine_model.dart';
-import '../../services/get_medicine_service.dart';
 import '../../services/user_medicine_service.dart';
 
 part 'medicine_state.dart';

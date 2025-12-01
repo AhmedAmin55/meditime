@@ -1,5 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import 'package:meditime/core/business_logic/nav_cubit/nav_cubit.dart';
 import 'package:meditime/core/constants/app_colors.dart';
 import 'package:meditime/core/constants/app_images.dart';

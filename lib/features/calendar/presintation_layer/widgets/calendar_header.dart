@@ -1,6 +1,10 @@
-import 'package:dropdown_search/dropdown_search.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:dropdown_search/dropdown_search.dart';
+
+// Project imports:
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_texts.dart';
 import '../../../../core/constants/app_textstyle.dart';
@@ -48,7 +52,6 @@ class CalendarHeader extends StatelessWidget {
                   radius: Radius.circular(20),
                 ),
                 menuProps: MenuProps(
-                  // barrierColor: AppColors.splashScreenColor.withOpacity(0.1),
                   align: MenuAlign.bottomStart,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(color: Colors.black.withOpacity(0.2)),
@@ -70,7 +73,9 @@ class CalendarHeader extends StatelessWidget {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.only(top: 5, left: 6),
                   hintText: AppTexts.member,
-                  hintStyle: AppTextsStyle.spaceGroteskMedium22(context).copyWith(fontSize: 15),
+                  hintStyle: AppTextsStyle.spaceGroteskMedium22(
+                    context,
+                  ).copyWith(fontSize: 15),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: AppColors.black, width: 0.5),
                     borderRadius: BorderRadius.circular(25),

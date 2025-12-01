@@ -1,9 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meditime/features/add_medicine/business_logic/add_medicine_cubit/add_medicine_cubit.dart';
 
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import '../../../../core/business_logic/nav_cubit/nav_cubit.dart';
 import '../../../../core/business_logic/user_cubit/user_cubit.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -11,8 +13,8 @@ import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
 import '../../../../core/constants/app_textstyle.dart';
 import '../../../../core/widgets/navbar.dart';
+import '../../../../main.dart';
 import '../../../auth/presintation/screens/authentication_screen.dart';
-import '../../data/services/check_user.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -45,7 +47,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void initState() {
-    // TODO: implement initStatess
     super.initState();
     _checkUser();
   }
@@ -62,8 +63,15 @@ class _SplashScreenState extends State<SplashScreen>
       context.read<UserCubit>().fetchUser(uid: user.uid);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => Navbar()),
+        MaterialPageRoute(builder: (_) => const Navbar()),
       );
+
+      if (shouldOpenNotificationsTab) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<NavCubit>().changeScreen(index: 3);
+        });
+        shouldOpenNotificationsTab = false;
+      }
     }
   }
 
@@ -83,22 +91,6 @@ class _SplashScreenState extends State<SplashScreen>
             AppTexts.appName,
             style: AppTextsStyle.merriweatherBold30(context),
           ),
-          // AnimatedTextKit(
-          //   repeatForever: true,
-          //   animatedTexts: [
-          //     ColorizeAnimatedText(
-          //       AppTexts.appName,
-          //       speed: Duration(milliseconds: 400),
-          //       colors: [
-          //         AppColors.white,
-          //         AppColors.medicineBorderColor,
-          //         AppColors.splashScreenColor,
-          //       ],
-          //       textStyle: AppTextsStyle.merriweatherBold30(context),
-          //     ),
-          //   ],
-          //   pause: Duration(milliseconds: 1000),
-          // ),
           SizedBox(height: 20),
           Text(
             "Never miss a dose again",

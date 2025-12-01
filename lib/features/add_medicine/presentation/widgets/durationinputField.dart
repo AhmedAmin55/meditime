@@ -1,5 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import '../../../../core/constants/app_colors.dart';
 import '../../business_logic/add_medicine_cubit/add_medicine_cubit.dart';
 import 'custom_input_field.dart';
@@ -23,7 +28,7 @@ class DurationInputField extends StatelessWidget {
         children: [
           const Text("i will take it for"),
           const Spacer(),
-          // الرقم
+
           CustomInputField(
             formWidth: 50,
             formHeight: 40,
@@ -37,7 +42,7 @@ class DurationInputField extends StatelessWidget {
             },
           ),
           const SizedBox(width: 10),
-          // الوحدة
+
           CustomInputField(
             hint: cubit.selectedUnit,
             formWidth: 100,

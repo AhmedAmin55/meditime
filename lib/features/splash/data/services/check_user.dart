@@ -1,6 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
+
+// Project imports:
 import '../../../auth/presintation/screens/authentication_screen.dart';
 import '../../../home/presintation/screens/home_screen.dart';
 
@@ -24,25 +28,25 @@ class CheckUser {
   }
 }
 
-// userChecker(BuildContext context) {
-//   return StreamBuilder(
-//     stream: auth.authStateChanges(), builder: (context, snapshot) {
-//     // 1. حالة الاتصال (Connection State)
-//     if (snapshot.connectionState == ConnectionState.waiting) {
-//       // عرض شاشة تحميل أثناء التحقق من المستخدم لأول مرة
-//       return const Scaffold(
-//         body: Center(child: CircularProgressIndicator()),
-//       );
-//     }
-//
-//     // 2. حالة المستخدم (Data State)
-//     if (snapshot.hasData && snapshot.data != null) {
-//       // المستخدم مسجل الدخول
-//       return const HomeScreen();
-//     } else {
-//       // المستخدم غير مسجل الدخول (أو قيمة null مستقرة)
-//       return const AuthenticationScreen();
-//     }
-//   },
-//   );
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,7 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import 'package:meditime/core/constants/app_colors.dart';
 import 'package:meditime/core/constants/app_images.dart';
 import 'package:meditime/core/services/user_medicine_service.dart';
@@ -24,9 +27,9 @@ class Navbar extends StatelessWidget {
           if (navState is NavCalendar) {
             return const CalendarScreen();
           } else if (navState is NavNotification) {
-            return  NotificationsScreen();
+            return NotificationsScreen();
           } else if (navState is NavProfile) {
-            return  ProfileScreen();
+            return ProfileScreen();
           } else if (navState is NavAdd) {
             return const AddMedicineFlowScreen();
           } else {
@@ -47,7 +50,12 @@ class Navbar extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(right: 15, left: 15, bottom: 5, top: 10),
+            padding: const EdgeInsets.only(
+              right: 15,
+              left: 15,
+              bottom: 5,
+              top: 10,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -73,7 +81,9 @@ class Navbar extends StatelessWidget {
         duration: const Duration(milliseconds: 250),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blueAccent.withOpacity(0.1) : Colors.transparent,
+          color: isSelected
+              ? Colors.blueAccent.withOpacity(0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Image.asset(
@@ -92,8 +102,12 @@ class Navbar extends StatelessWidget {
         final navCubit = context.read<NavCubit>();
         final bool isInAddFlow = navCubit.currentIndex == 2;
 
-        final bool canProceed = state is AddMedicineInProgress ? addCubit.canGoNext : true;
-        final int currentPage = state is AddMedicineInProgress ? state.currentPage : 0;
+        final bool canProceed = state is AddMedicineInProgress
+            ? addCubit.canGoNext
+            : true;
+        final int currentPage = state is AddMedicineInProgress
+            ? state.currentPage
+            : 0;
         final bool isLastPage = currentPage == 3;
 
         return GestureDetector(
@@ -105,12 +119,10 @@ class Navbar extends StatelessWidget {
             }
 
             if (!canProceed && !isLastPage) {
-              // لما تضغط وهو (…) → ما تعملش حاجة خالص
               return;
             }
 
             if (isLastPage) {
-              // حفظ الدواء
               try {
                 final rawTimes = addCubit.uiRows.map((row) {
                   return {
@@ -135,17 +147,22 @@ class Navbar extends StatelessWidget {
                 navCubit.changeScreen(index: 0);
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Medicine added successfully!"), backgroundColor: Colors.green),
+                  const SnackBar(
+                    content: Text("Medicine added successfully!"),
+                    backgroundColor: Colors.green,
+                  ),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
+                  SnackBar(
+                    content: Text("Error: $e"),
+                    backgroundColor: Colors.red,
+                  ),
                 );
               }
               return;
             }
 
-            // لو تمام → روح للصفحة الجاية
             addCubit.goNext();
           },
           child: Container(
@@ -165,11 +182,27 @@ class Navbar extends StatelessWidget {
             child: Center(
               child: isInAddFlow
                   ? (canProceed
-                  ? (isLastPage
-                  ? const Icon(Icons.check, color: Colors.white, size: 28)
-                  : const Icon(Icons.arrow_forward, color: Colors.white, size: 24))
-                  : Image.asset(AppImages.addWaitingIcon,width: 25, color: Colors.white))
-                  : Image.asset(AppImages.addScreenIcon, width: 17, color: Colors.white),
+                        ? (isLastPage
+                              ? const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 28,
+                                )
+                              : const Icon(
+                                  Icons.arrow_forward,
+                                  color: Colors.white,
+                                  size: 24,
+                                ))
+                        : Image.asset(
+                            AppImages.addWaitingIcon,
+                            width: 25,
+                            color: Colors.white,
+                          ))
+                  : Image.asset(
+                      AppImages.addScreenIcon,
+                      width: 17,
+                      color: Colors.white,
+                    ),
             ),
           ),
         );

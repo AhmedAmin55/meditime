@@ -1,8 +1,9 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
 import 'app_colors.dart';
 import 'app_fonts.dart';
-
 
 class AppTextsStyle {
 //spaceGrotesk

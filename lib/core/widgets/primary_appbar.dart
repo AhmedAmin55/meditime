@@ -1,8 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import '../constants/app_images.dart';
-import '../constants/app_textstyle.dart';
-import '../../features/auth/presintation/screens/authentication_screen.dart';
 
 class PrimaryAppbar extends StatelessWidget {
   PrimaryAppbar({

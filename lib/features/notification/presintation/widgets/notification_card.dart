@@ -1,7 +1,9 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:meditime/core/constants/app_images.dart';
 import 'package:meditime/core/constants/app_textstyle.dart';
-
 import '../../../../core/constants/app_colors.dart';
 import '../../data/models/notification_model.dart';
 
@@ -30,8 +32,6 @@ class NotificationCard extends StatelessWidget {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -40,7 +40,7 @@ class NotificationCard extends StatelessWidget {
       elevation: 2,
       color: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      // margin: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -142,9 +142,11 @@ class NotificationCard extends StatelessWidget {
                         child: Center(
                           child: Text(
                             "Skip",
-                            style: AppTextsStyle.spaceGroteskMedium22(
-                              context,
-                            ).copyWith(fontSize: 14,color: AppColors.black.withOpacity(0.6)),
+                            style: AppTextsStyle.spaceGroteskMedium22(context)
+                                .copyWith(
+                                  fontSize: 14,
+                                  color: AppColors.black.withOpacity(0.6),
+                                ),
                           ),
                         ),
                       ),
@@ -152,12 +154,14 @@ class NotificationCard extends StatelessWidget {
                   ] else ...[
                     TextButton.icon(
                       onPressed: onDismiss,
-                      icon: Image.asset(AppImages.deleteIcon,width: 11,),
+                      icon: Image.asset(AppImages.deleteIcon, width: 11),
                       label: Text(
                         'Dismiss',
-                        style: AppTextsStyle.spaceGroteskMedium22(
-                          context,
-                        ).copyWith(fontSize: 14,color: AppColors.black.withOpacity(0.6)),
+                        style: AppTextsStyle.spaceGroteskMedium22(context)
+                            .copyWith(
+                              fontSize: 14,
+                              color: AppColors.black.withOpacity(0.6),
+                            ),
                       ),
                     ),
                   ],

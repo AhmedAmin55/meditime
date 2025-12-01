@@ -28,7 +28,6 @@ class AppTexts {
   static const String weakPassword = "Weak password";
   static const String someThingWentWrong = "Some thing went wrong";
 
-  //static const String userNotFound ="User not found";
   static const String emailOrPasswordIncorrect =
       "Email or password is incorrect";
   static const String problemWithInternetConnection =
@@ -56,6 +55,7 @@ class AppTexts {
   static const String hereIs = "Here is ";
   static const String member = "Member";
   static const String schedule = " schedule";
+  static const String noMedicinesForThisDay = " No medicines for this day";
 
   //add
   static const String addMedicationForYourselfOrFriends =
@@ -89,8 +89,7 @@ class AppTexts {
 
   //
 
-
- // profile
+  // profile
   static const String changeProfileName = "Change profile name";
   static const String resetPassword = "Reset Password";
   static const String signOut = "Sign Out →";

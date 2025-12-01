@@ -1,7 +1,8 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
 import '../../../../core/constants/app_colors.dart';
-
 
 class ActiveSearchBar extends StatelessWidget {
   const ActiveSearchBar({super.key});
@@ -19,12 +20,13 @@ class ActiveSearchBar extends StatelessWidget {
           enabledBorder: _borderDecoration(),
           hintText: "Search Here",
           hintStyle: TextStyle(
-            color: AppColors.splashScreenColor.withOpacity(0.6)
+            color: AppColors.splashScreenColor.withOpacity(0.6),
           ),
         ),
       ),
     );
   }
+
   InputBorder _borderDecoration() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),

@@ -1,13 +1,16 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// Project imports:
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
 import '../../../../core/constants/app_textstyle.dart';
 import '../../../../core/widgets/primary_appbar.dart';
 import '../../business_logic/add_medicine_cubit/add_medicine_cubit.dart';
-import '../widgets/add_page_background.dart';
 import '../widgets/add_page_return_icon.dart';
 import '../widgets/custom_input_field.dart';
 import '../widgets/medicine_type_selector.dart';
@@ -46,13 +49,13 @@ class AddDosageAndTypeMedicine extends StatelessWidget {
                     imagePath: AppImages.logo,
                   ),
                   const SizedBox(height: 8),
-                  // ======= Progress Bar =======
+
                   ProgressBar(isPage: 1),
                 ],
               ),
             ),
             const SizedBox(height: 8),
-            // ======= Body =======
+
             Expanded(
               child: Container(
                 height: height,
@@ -90,7 +93,7 @@ class AddDosageAndTypeMedicine extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             CustomInputField(
-                              controller: cubit.dosage, // نستخدم controller الـ cubit
+                              controller: cubit.dosage,
                               hint: "e.g. 1 tablet, 1 spoon, 5 ml",
                               onChange: (value) {
                                 cubit.changeDosage();

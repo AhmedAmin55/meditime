@@ -1,12 +1,15 @@
+// Flutter imports:
+import 'package:flutter/cupertino.dart';
+
+// Package imports:
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:meditime/core/constants/app_texts.dart';
 import 'package:meta/meta.dart';
 
+// Project imports:
+import 'package:meditime/core/constants/app_texts.dart';
 import '../../../../core/models/user_model.dart';
 import '../../../../core/repo/user_repo.dart';
-import '../../data/services/auth_user.dart';
 
 part 'login_state.dart';
 
@@ -22,7 +25,6 @@ class LoginCubit extends Cubit<LoginState> {
   }) async {
     emit(LoginLoading());
     try {
-      // تسجيل الدخول في Firebase Auth
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -30,7 +32,6 @@ class LoginCubit extends Cubit<LoginState> {
 
       final uid = userCredential.user!.uid;
 
-      // جلب بيانات المستخدم من Firestore
       UserModel? user = await userRepo.getUserData(uid);
       if (user == null) {
         emit(LoginFailure(errorMessage: "User data not found in Firestore"));
@@ -41,9 +42,13 @@ class LoginCubit extends Cubit<LoginState> {
       if (e.code == "invalid-credential") {
         emit(LoginFailure(errorMessage: AppTexts.emailOrPasswordIncorrect));
       } else if (e.code == "network-request-failed") {
-        emit(LoginFailure(errorMessage: AppTexts.problemWithInternetConnection));
+        emit(
+          LoginFailure(errorMessage: AppTexts.problemWithInternetConnection),
+        );
       } else {
-        emit(LoginFailure(errorMessage: e.message ?? AppTexts.someThingWentWrong));
+        emit(
+          LoginFailure(errorMessage: e.message ?? AppTexts.someThingWentWrong),
+        );
       }
     } catch (e) {
       emit(LoginFailure(errorMessage: AppTexts.someThingWentWrong));

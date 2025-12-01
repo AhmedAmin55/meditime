@@ -1,7 +1,12 @@
+// Dart imports:
 import 'dart:io';
+
+// Package imports:
 import 'package:bloc/bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
+
+// Project imports:
 import '../../models/user_model.dart';
 import '../../repo/user_repo.dart';
 

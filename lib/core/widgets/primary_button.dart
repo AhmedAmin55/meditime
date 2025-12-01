@@ -1,6 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
-import '../constants/app_texts.dart';
+// Project imports:
 import '../constants/app_textstyle.dart';
 
 class PrimaryButton extends StatelessWidget {

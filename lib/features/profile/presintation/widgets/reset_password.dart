@@ -1,8 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/business_logic/user_cubit/user_cubit.dart';
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
+
+// Project imports:
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
@@ -11,12 +13,13 @@ import '../../../../core/widgets/custom_textformfield.dart';
 import '../../../../core/widgets/primary_button.dart';
 
 class ResetPassword extends StatelessWidget {
-   ResetPassword({super.key, required this.passwordController});
+  ResetPassword({super.key, required this.passwordController});
 
   final TextEditingController passwordController;
 
   final _formKey = GlobalKey<FormState>();
   FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -49,13 +52,7 @@ class ResetPassword extends StatelessWidget {
             ),
             PrimaryButton(
               onTap: () {
-                if (_formKey.currentState!.validate()) {
-                  // BlocProvider.of<UserCubit>(
-                  //   context,
-                  // ).resetPassword(auth.currentUser!.uid, nameController.text);
-                  // nameController.clear();
-                  // Navigator.pop(context);
-                }
+                if (_formKey.currentState!.validate()) {}
               },
               title: "Edit",
               color: AppColors.splashScreenColor,

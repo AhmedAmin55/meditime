@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:meditime/core/constants/app_colors.dart';
 import 'package:meditime/core/constants/app_textstyle.dart';
 
@@ -19,7 +22,7 @@ class InfoContainer extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 3 / 1.3,
       child: Container(
-        padding: EdgeInsets.only(left: 10,top: 5),
+        padding: EdgeInsets.only(left: 10, top: 5),
         decoration: BoxDecoration(
           color: AppColors.splashScreenColor,
           borderRadius: BorderRadius.circular(14),
@@ -35,7 +38,7 @@ class InfoContainer extends StatelessWidget {
                   title,
                   style: AppTextsStyle.poppinsMedium20(
                     context,
-                  ).copyWith(color: AppColors.white,fontSize: 13),
+                  ).copyWith(color: AppColors.white, fontSize: 13),
                 ),
               ],
             ),
@@ -43,7 +46,9 @@ class InfoContainer extends StatelessWidget {
             Center(
               child: Text(
                 value,
-                style : AppTextsStyle.poppinsMedium20(context).copyWith(color: AppColors.white, fontSize: 20),
+                style: AppTextsStyle.poppinsMedium20(
+                  context,
+                ).copyWith(color: AppColors.white, fontSize: 20),
               ),
             ),
           ],

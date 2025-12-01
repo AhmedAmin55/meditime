@@ -4,7 +4,7 @@ part of 'auth_switch_cubit.dart';
 sealed class AuthSwitchState {}
 
 
-final class AuthSwitchInitial extends AuthSwitchState {} // "login button"
-final class AuthSignUpState extends AuthSwitchState {} // "sign up button"
+final class AuthSwitchInitial extends AuthSwitchState {} 
+final class AuthSignUpState extends AuthSwitchState {} 
 
 

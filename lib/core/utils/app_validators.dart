@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:meditime/core/constants/app_texts.dart';
 
 extension AppValidators on String? {

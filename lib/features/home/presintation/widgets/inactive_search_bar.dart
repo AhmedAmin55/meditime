@@ -1,9 +1,15 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+// Project imports:
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_texts.dart';
 import '../../../../core/constants/app_textstyle.dart';
 import '../../business_logic/search_cubit/search_cubit.dart';
+
 class InactiveSearchBar extends StatelessWidget {
   const InactiveSearchBar({super.key});
 

@@ -1,7 +1,10 @@
-// features/add_medicine/business_logic/add_medicine_cubit/add_medicine_cubit.dart
-
-import 'package:bloc/bloc.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:bloc/bloc.dart';
+
+// Project imports:
 import '../../data/models/reminder_model.dart';
 
 part 'add_medicine_state.dart';
@@ -13,7 +16,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     selectedUnit = "days";
     notifyMe = "Everyday";
 
-    addEmptyReminder(); // سطر وقت واحد تلقائي
+    addEmptyReminder();
 
     _updateState();
   }
@@ -35,10 +38,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
   List<ReminderModel> uiRows = [];
 
   void _updateState() {
-    emit(AddMedicineInProgress(
-      currentPage: isPage,
-      uiRows: List.from(uiRows),
-    ));
+    emit(AddMedicineInProgress(currentPage: isPage, uiRows: List.from(uiRows)));
   }
 
   void setDurationRaw(int number) {
@@ -81,18 +81,30 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
   }
 
   void updateHour(int index, String h) {
-    uiRows[index] = ReminderModel(hour: h, minute: uiRows[index].minute, period: uiRows[index].period);
+    uiRows[index] = ReminderModel(
+      hour: h,
+      minute: uiRows[index].minute,
+      period: uiRows[index].period,
+    );
     _updateState();
   }
 
   void updateMinute(int index, String m) {
-    uiRows[index] = ReminderModel(hour: uiRows[index].hour, minute: m, period: uiRows[index].period);
+    uiRows[index] = ReminderModel(
+      hour: uiRows[index].hour,
+      minute: m,
+      period: uiRows[index].period,
+    );
     _updateState();
   }
 
   void togglePeriod(int index) {
     final p = uiRows[index].period == "AM" ? "PM" : "AM";
-    uiRows[index] = ReminderModel(hour: uiRows[index].hour, minute: uiRows[index].minute, period: p);
+    uiRows[index] = ReminderModel(
+      hour: uiRows[index].hour,
+      minute: uiRows[index].minute,
+      period: p,
+    );
     _updateState();
   }
 
@@ -101,7 +113,6 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     _updateState();
   }
 
-  // === الفاليديشن القوي بدون أي رسائل ===
   bool get canGoNext {
     switch (isPage) {
       case 0:
@@ -135,7 +146,6 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     }
   }
 
-  // === goNext بسيط جدًا بدون أي SnackBar ===
   void goNext() {
     if (canGoNext && isPage < 3) {
       isPage++;
@@ -151,10 +161,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
   }
 
   void changeDosage() {
-    emit(AddMedicineInProgress(
-      currentPage: isPage,
-      uiRows: List.from(uiRows),
-    ));
+    emit(AddMedicineInProgress(currentPage: isPage, uiRows: List.from(uiRows)));
   }
 
   void reset() {

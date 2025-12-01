@@ -1,5 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
 import '../../../../core/constants/app_colors.dart';
 
 class AddPageBackground extends StatelessWidget {

@@ -1,11 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:meditime/core/constants/app_colors.dart';
-import 'package:meditime/core/constants/app_texts.dart';
-import 'package:meditime/core/constants/app_textstyle.dart';
+// Flutter imports:
 
-import '../../../../core/widgets/navbar.dart';
+
 //
 // class AuthUser {
 //   FirebaseAuth auth = FirebaseAuth.instance;
