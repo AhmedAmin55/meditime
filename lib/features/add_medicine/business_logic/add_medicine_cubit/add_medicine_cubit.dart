@@ -8,14 +8,12 @@ part 'add_medicine_state.dart';
 
 class AddMedicineCubit extends Cubit<AddMedicineState> {
   AddMedicineCubit() : super(AddMedicineInitial()) {
-    // Default Values
     assignTo.text = "Me";
     selectedType = "Pills";
     selectedUnit = "days";
     notifyMe = "Everyday";
 
-    // مهم جدًا: نضيف سطر وقت واحد تلقائيًا أول ما نفتح الـ Add Flow
-    addEmptyReminder();
+    addEmptyReminder(); // سطر وقت واحد تلقائي
 
     _updateState();
   }
@@ -62,10 +60,18 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
 
   void _calculateDuration() {
     switch (selectedUnit) {
-      case "days":   duration = durationRaw; break;
-      case "weeks":  duration = durationRaw * 7; break;
-      case "months": duration = durationRaw * 30; break;
-      case "years":  duration = durationRaw * 365; break;
+      case "days":
+        duration = durationRaw;
+        break;
+      case "weeks":
+        duration = durationRaw * 7;
+        break;
+      case "months":
+        duration = durationRaw * 30;
+        break;
+      case "years":
+        duration = durationRaw * 365;
+        break;
     }
   }
 
@@ -95,7 +101,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     _updateState();
   }
 
-  // === هل نقدر نروح للصفحة الجاية؟ ===
+  // === الفاليديشن القوي بدون أي رسائل ===
   bool get canGoNext {
     switch (isPage) {
       case 0:
@@ -103,13 +109,25 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
       case 1:
         return dosage.text.trim().isNotEmpty;
       case 2:
-        return duration > 0 &&
-            uiRows.isNotEmpty &&
-            uiRows.any((r) =>
-            r.hour.trim().isNotEmpty &&
-                r.minute.trim().isNotEmpty &&
-                int.tryParse(r.hour) != null &&
-                int.tryParse(r.minute) != null);
+        if (duration <= 0) return false;
+        if (uiRows.isEmpty) return false;
+
+        for (var row in uiRows) {
+          final hourStr = row.hour.trim();
+          final minuteStr = row.minute.trim();
+
+          if (hourStr.isEmpty || minuteStr.isEmpty) return false;
+
+          final hour = int.tryParse(hourStr);
+          final minute = int.tryParse(minuteStr);
+
+          if (hour == null || minute == null) return false;
+
+          if (hour < 1 || hour > 12) return false;
+
+          if (minute < 0 || minute > 59) return false;
+        }
+        return true;
       case 3:
         return true;
       default:
@@ -117,6 +135,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     }
   }
 
+  // === goNext بسيط جدًا بدون أي SnackBar ===
   void goNext() {
     if (canGoNext && isPage < 3) {
       isPage++;
@@ -130,12 +149,14 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
       _updateState();
     }
   }
-void changeDodage(){
- emit(AddMedicineInProgress(
-    currentPage:isPage,
-    uiRows: List.from(uiRows),
-  ));
-}
+
+  void changeDosage() {
+    emit(AddMedicineInProgress(
+      currentPage: isPage,
+      uiRows: List.from(uiRows),
+    ));
+  }
+
   void reset() {
     isPage = 0;
     assignTo.text = "Me";

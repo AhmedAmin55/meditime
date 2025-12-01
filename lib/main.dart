@@ -6,11 +6,12 @@ import 'package:meditime/core/business_logic/user_cubit/user_cubit.dart';
 import 'package:meditime/core/repo/user_repo.dart';
 import 'package:meditime/core/services/user_service.dart';
 
-import 'core/business_logic/medicine_cubit/medicinde_cubit.dart';
+import 'core/business_logic/medicine_cubit/medicine_cubit.dart';
 import 'core/business_logic/nav_cubit/nav_cubit.dart';
 import 'core/constants/app_texts.dart';
 
 import 'core/services/get_medicine_service.dart';
+import 'core/services/user_medicine_service.dart';
 import 'features/add_medicine/business_logic/add_medicine_cubit/add_medicine_cubit.dart';
 import 'features/calendar/business_logic_layer/days_cubit/days_cubit.dart';
 import 'features/home/business_logic/search_cubit/search_cubit.dart';
@@ -41,7 +42,7 @@ class Meditime extends StatelessWidget {
         BlocProvider(create: (_) => SearchCubit()),
         BlocProvider(create: (_) => NavCubit()),
         BlocProvider(create: (_) => AddMedicineCubit()),
-        BlocProvider(create: (_) => MedicineCubit(GetMedicineService())),
+        BlocProvider(create: (_) => MedicineCubit(UserMedicineService())),
         BlocProvider(create: (_) => UserCubit(UserRepo(UserService()))),
       ],
       child: MaterialApp(

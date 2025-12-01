@@ -1,15 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-// core/services/user_medicine_service.dart
+// lib/core/services/user_medicine_service.dart
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../features/add_medicine/data/models/reminder_model.dart';
+import '../models/medicine_model.dart';
+import '../models/reminder_status.dart';
 
 class UserMedicineService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String _uid = FirebaseAuth.instance.currentUser!.uid;
 
+  // ====================== ADD MEDICINE (زي ما كان) ======================
   Future<void> addUserMedicine({
     required String medicineName,
     required String specialInstructions,
@@ -25,24 +26,24 @@ class UserMedicineService {
     final String normalizedCustomDay = customDay.toLowerCase().trim();
 
     Set<int> allowedWeekdays = {};
-    if (normalizedCustomDay == "everyday") {
+    if (normalizedCustomDay == "everyday" || normalizedCustomDay.contains("كل يوم")) {
       allowedWeekdays = {1, 2, 3, 4, 5, 6, 7};
-    } else if (normalizedCustomDay.contains("sunday") || normalizedCustomDay.contains("الأحد")) {
-      allowedWeekdays.add(DateTime.sunday);
-    } else if (normalizedCustomDay.contains("monday") || normalizedCustomDay.contains("الإثنين")) {
-      allowedWeekdays.add(DateTime.monday);
-    } else if (normalizedCustomDay.contains("tuesday") || normalizedCustomDay.contains("الثلاثاء")) {
-      allowedWeekdays.add(DateTime.tuesday);
-    } else if (normalizedCustomDay.contains("wednesday") || normalizedCustomDay.contains("الأربعاء")) {
-      allowedWeekdays.add(DateTime.wednesday);
-    } else if (normalizedCustomDay.contains("thursday") || normalizedCustomDay.contains("الخميس")) {
-      allowedWeekdays.add(DateTime.thursday);
-    } else if (normalizedCustomDay.contains("friday") || normalizedCustomDay.contains("الجمعة")) {
-      allowedWeekdays.add(DateTime.friday);
-    } else if (normalizedCustomDay.contains("saturday") || normalizedCustomDay.contains("السبت")) {
-      allowedWeekdays.add(DateTime.saturday);
     } else {
-      allowedWeekdays = {1, 2, 3, 4, 5, 6, 7};
+      final Map<String, int> dayMap = {
+        "sunday": DateTime.sunday, "الأحد": DateTime.sunday,
+        "monday": DateTime.monday, "الإثنين": DateTime.monday,
+        "tuesday": DateTime.tuesday, "الثلاثاء": DateTime.tuesday,
+        "wednesday": DateTime.wednesday, "الأربعاء": DateTime.wednesday,
+        "thursday": DateTime.thursday, "الخميس": DateTime.thursday,
+        "friday": DateTime.friday, "الجمعة": DateTime.friday,
+        "saturday": DateTime.saturday, "السبت": DateTime.saturday,
+      };
+      for (var entry in dayMap.entries) {
+        if (normalizedCustomDay.contains(entry.key)) {
+          allowedWeekdays.add(entry.value);
+        }
+      }
+      if (allowedWeekdays.isEmpty) allowedWeekdays = {1, 2, 3, 4, 5, 6, 7};
     }
 
     for (var time in customTimes) {
@@ -64,7 +65,6 @@ class UserMedicineService {
 
       for (int i = 0; i < durationInDays; i++) {
         DateTime currentDay = startDate.add(Duration(days: i));
-
         if (!allowedWeekdays.contains(currentDay.weekday)) continue;
 
         DateTime reminderDateTime = DateTime(
@@ -99,5 +99,79 @@ class UserMedicineService {
       "reminder_times_status": remindersStatus,
       "created_at": FieldValue.serverTimestamp(),
     });
+  }
+
+  // ====================== GET TODAY'S MEDICINES (اللي كان في GetMedicineService) ======================
+  Future<List<MedicineModel>> getAllMedicines() async {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    final snapshot = await _firestore
+        .collection('user_medicines')
+        .where('user_id', isEqualTo: _uid)
+        .get();
+
+    final List<MedicineModel> allMedicines = [];
+
+    for (final doc in snapshot.docs) {
+      final data = doc.data();
+      final id = doc.id;
+
+      final reminderTimes = (data['custom_times'] as List<dynamic>?)
+          ?.map((e) => ReminderModel.fromMap(e as Map<String, dynamic>))
+          .toList() ??
+          [];
+
+      final reminderTimesStatus = (data['reminder_times_status'] as List<dynamic>?)
+          ?.map((e) => ReminderStatus.fromMap(e as Map<String, dynamic>))
+          .toList() ??
+          [];
+
+      final medicine = MedicineModel(
+        id: id,
+        medicineName: data['medicine_name'] ?? 'غير معروف',
+        specialInstructions: data['special_instructions'] ?? '',
+        assignToWho: data['assign_to_who'] ?? 'Me',
+        dosage: data['dosage'] ?? '',
+        medicineType: data['medicine_type'] ?? 'Pills',
+        duration: (data['duration_in_days'] ?? 30).toString(),
+        durationInDays: (data['duration_in_days'] as num?)?.toInt() ?? 30,
+        customizeDays: data['custom_day'] ?? 'Everyday',
+        reminderTimes: reminderTimes,
+        reminderTimesStatus: reminderTimesStatus,
+        createdAt: data['created_at'] as Timestamp?,
+      );
+
+      final hasTodayDose = medicine.reminderTimesStatus.any((r) {
+        final d = r.reminderTime.toDate();
+        return d.year == today.year && d.month == today.month && d.day == today.day;
+      });
+
+      if (hasTodayDose) allMedicines.add(medicine);
+    }
+
+    // ترتيب حسب أقرب جرعة
+    allMedicines.sort((a, b) {
+      final nextA = a.reminderTimesStatus
+          .where((r) => r.status == "waiting")
+          .map((r) => r.reminderTime.toDate())
+          .firstOrNull;
+
+      final nextB = b.reminderTimesStatus
+          .where((r) => r.status == "waiting")
+          .map((r) => r.reminderTime.toDate())
+          .firstOrNull;
+
+      if (nextA == null) return 1;
+      if (nextB == null) return -1;
+      return nextA.compareTo(nextB);
+    });
+
+    return allMedicines;
+  }
+
+  // ====================== DELETE MEDICINE ======================
+  Future<void> deleteMedicine(String id) async {
+    await _firestore.collection('user_medicines').doc(id).delete();
   }
 }

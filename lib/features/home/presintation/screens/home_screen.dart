@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditime/core/constants/app_colors.dart';
-import '../../../../core/business_logic/medicine_cubit/medicinde_cubit.dart';
+import '../../../../core/business_logic/medicine_cubit/medicine_cubit.dart';
 import '../../../../core/models/medicine_model.dart';
 import '../../business_logic/search_cubit/search_cubit.dart';
 import '../widgets/active_search_bar.dart';

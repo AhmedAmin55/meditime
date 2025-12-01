@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:meditime/core/business_logic/medicine_cubit/medicinde_cubit.dart';
+import 'package:meditime/core/business_logic/medicine_cubit/medicine_cubit.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../../core/constants/app_colors.dart';

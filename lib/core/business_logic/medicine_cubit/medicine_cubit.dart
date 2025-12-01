@@ -3,12 +3,13 @@ import 'package:meta/meta.dart';
 
 import '../../models/medicine_model.dart';
 import '../../services/get_medicine_service.dart';
+import '../../services/user_medicine_service.dart';
 
-part 'medicinde_state.dart';
+part 'medicine_state.dart';
 
 
 class MedicineCubit extends Cubit<MedicineState> {
-  final GetMedicineService service;
+  final UserMedicineService service;
 
   MedicineCubit(this.service) : super(MedicineInitial());
   var list ;

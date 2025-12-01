@@ -1,4 +1,4 @@
-part of 'medicinde_cubit.dart';
+part of 'medicine_cubit.dart';
 
 @immutable
 

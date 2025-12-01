@@ -93,7 +93,7 @@ class AddDosageAndTypeMedicine extends StatelessWidget {
                               controller: cubit.dosage, // نستخدم controller الـ cubit
                               hint: "e.g. 1 tablet, 1 spoon, 5 ml",
                               onChange: (value) {
-                                cubit.changeDodage();
+                                cubit.changeDosage();
                               },
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
