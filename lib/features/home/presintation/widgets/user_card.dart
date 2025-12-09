@@ -43,7 +43,10 @@ class UserCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 25,
-                    backgroundImage: AssetImage(AppImages.logo),
+                    backgroundImage: AssetImage(AppImages.personIcon,
+                    ),
+                    backgroundColor: AppColors.splashScreenColor,
+
                   ),
                   const SizedBox(width: 15),
                   BlocBuilder<UserCubit, UserState>(
@@ -140,9 +143,9 @@ class UserCard extends StatelessWidget {
                             child: CircleAvatar(
                               radius: 20,
                               backgroundImage: AssetImage(
-                                AppImages.facebookIcon,
+                                AppImages.personIcon,
                               ),
-                              backgroundColor: Colors.blue.shade200,
+                              backgroundColor: AppColors.splashScreenColor,
                             ),
                           );
                         }),

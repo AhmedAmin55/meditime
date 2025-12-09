@@ -52,7 +52,7 @@ class HomeScreen extends StatelessWidget {
                           if (state is MedicineLoaded) {
                             if (state.medicines.isEmpty) {
                               return const Center(
-                                child: Text("لا توجد أدوية حاليًا"),
+                                child: Text("No Medicines Yet"),
                               );
                             }
                             return ListView.builder(
@@ -68,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                             return Center(child: Text(state.message));
                           }
                           return const Center(
-                            child: Text("جاري تحميل الأدوية..."),
+                            child: Text("Loading..."),
                           );
                         },
                       ),
