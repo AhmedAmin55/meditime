@@ -13,9 +13,9 @@ import '../../../../core/models/medicine_model.dart';
 import '../../business_logic_layer/days_cubit/days_cubit.dart';
 
 class CalendarMedicineCard extends StatelessWidget {
-  final MedicineModel medicine;
-
-  const CalendarMedicineCard({super.key, required this.medicine});
+  final List<MedicineModel> medicine;
+final int index;
+  const CalendarMedicineCard({super.key, required this.medicine, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class CalendarMedicineCard extends StatelessWidget {
     String time = "";
     final today = context.read<DaysCubit>().selectedDate;
 
-    final todayStatus = medicine.reminderTimesStatus.where((s) {
+    final todayStatus = medicine[index].reminderTimesStatus.where((s) {
       final d = s.reminderTime.toDate();
       return d.year == today.year &&
           d.month == today.month &&
@@ -41,6 +41,7 @@ class CalendarMedicineCard extends StatelessWidget {
     return TimelineTile(
       alignment: TimelineAlign.manual,
       lineXY: 0.18,
+      isFirst: medicine[index] == 0? false:true ,
       indicatorStyle: const IndicatorStyle(
         width: 6,
         color: AppColors.timeLineColor,
@@ -72,23 +73,23 @@ class CalendarMedicineCard extends StatelessWidget {
         child: ListTile(
           contentPadding: const EdgeInsets.only(right: 10),
           leading: Image.asset(
-            _getIcon(medicine.medicineType),
+            _getIcon(medicine[index].medicineType),
             width: width * 0.10,
           ),
           title: Text(
-            medicine.medicineName,
+            medicine[index].medicineName,
             style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
           subtitle: Text(
-            medicine.medicineType,
+            medicine[index].medicineType,
             style: const TextStyle(fontSize: 11),
           ),
           trailing: Container(
             width: width*0.08,
-            height: height*0.016,
+            height: height*0.012,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: _getStatusColor(medicine.currentStatus),
+              color: _getStatusColor(medicine[index].currentStatus),
             ),
           ),
         ),

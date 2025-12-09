@@ -36,10 +36,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             const ProgressSection(),
             const SizedBox(height: 20),
 
-            // التقويم دايمًا ظاهر (مش هنخفيه)
             const CalendarSection(),
-
-            // السهم بس بيعمل toggle للحالة (حتى لو مش بنستخدمها دلوقتي في الـ UI)
             GestureDetector(
               onTap: () => context.read<DaysCubit>().toggleCalendar(),
               child: const Center(
@@ -48,13 +45,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
             const SizedBox(height: 20),
 
-            // قايمة الأدوية حسب اليوم المختار
             Expanded(
               child: BlocBuilder<DaysCubit, DaysState>(
                 builder: (context, daysState) {
-                  // نجيب التاريخ المختار من الـ state الجديد
                   final selectedDay = daysState.selectedDate;
-
                   final List<MedicineModel> allMedicines =
                   context.read<MedicineCubit>().state is MedicineLoaded
                       ? (context.read<MedicineCubit>().state as MedicineLoaded)
@@ -72,7 +66,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       return reminderDay == selectedDay;
                     });
                   }).toList();
-
                   if (todayMedicines.isEmpty) {
                     return Center(
                       child: Text(
@@ -82,14 +75,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     );
                   }
-
-                  // ترتيب الأدوية حسب الوقت
                   todayMedicines.sort((a, b) {
                     final timeA = a.reminderTimesStatus
                         .where((s) => s.reminderTime.toDate().day == selectedDay.day)
                         .map((s) => s.reminderTime.toDate())
                         .firstOrNull;
-
                     final timeB = b.reminderTimesStatus
                         .where((s) => s.reminderTime.toDate().day == selectedDay.day)
                         .map((s) => s.reminderTime.toDate())
@@ -104,11 +94,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     itemCount: todayMedicines.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: CalendarMedicineCard(
-                          medicine: todayMedicines[index],
-                        ),
+                      return CalendarMedicineCard(
+                        medicine: todayMedicines,
+                        index : index,
                       );
                     },
                   );
