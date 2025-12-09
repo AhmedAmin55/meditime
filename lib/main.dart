@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:device_preview/device_preview.dart';
 // Project imports:
 import 'core/business_logic/medicine_cubit/medicine_cubit.dart';
 import 'core/business_logic/nav_cubit/nav_cubit.dart';
@@ -26,7 +26,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await NotificationService().init();
-  runApp(const Meditime());
+  runApp( DevicePreview(
+    enabled: true,
+    builder: (context) {
+      return Meditime();
+    }
+  ));
 }
 
 class Meditime extends StatelessWidget {

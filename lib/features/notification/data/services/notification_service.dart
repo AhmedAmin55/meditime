@@ -16,20 +16,15 @@ class NotificationService {
       GlobalKey<NavigatorState>();
 
   Future<void> init() async {
-    NotificationSettings settings = await _messaging.requestPermission(
+   await _messaging.requestPermission(
       alert: true,
       badge: true,
       sound: true,
       provisional: false,
     );
 
-    if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      debugPrint('المستخدم رفض إذن الإشعارات');
-    }
-
     String? token = await _messaging.getToken();
     debugPrint('FCM Token: $token');
-
     _handleNotificationClicks();
   }
 

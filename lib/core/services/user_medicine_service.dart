@@ -26,25 +26,17 @@ class UserMedicineService {
     final String normalizedCustomDay = customDay.toLowerCase().trim();
 
     Set<int> allowedWeekdays = {};
-    if (normalizedCustomDay == "everyday" ||
-        normalizedCustomDay.contains("كل يوم")) {
+    if (normalizedCustomDay == "everyday" ) {
       allowedWeekdays = {1, 2, 3, 4, 5, 6, 7};
     } else {
       final Map<String, int> dayMap = {
         "sunday": DateTime.sunday,
-        "الأحد": DateTime.sunday,
         "monday": DateTime.monday,
-        "الإثنين": DateTime.monday,
         "tuesday": DateTime.tuesday,
-        "الثلاثاء": DateTime.tuesday,
         "wednesday": DateTime.wednesday,
-        "الأربعاء": DateTime.wednesday,
         "thursday": DateTime.thursday,
-        "الخميس": DateTime.thursday,
         "friday": DateTime.friday,
-        "الجمعة": DateTime.friday,
         "saturday": DateTime.saturday,
-        "السبت": DateTime.saturday,
       };
       for (var entry in dayMap.entries) {
         if (normalizedCustomDay.contains(entry.key)) {
@@ -138,7 +130,7 @@ class UserMedicineService {
 
       final medicine = MedicineModel(
         id: id,
-        medicineName: data['medicine_name'] ?? 'غير معروف',
+        medicineName: data['medicine_name'] ?? 'unknown',
         specialInstructions: data['special_instructions'] ?? '',
         assignToWho: data['assign_to_who'] ?? 'Me',
         dosage: data['dosage'] ?? '',
