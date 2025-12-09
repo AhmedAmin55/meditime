@@ -44,7 +44,6 @@ class NotificationService {
 
   static void _openNotificationsTab() {
     shouldOpenNotificationsTab = true;
-
     final navigatorContext = navigatorKey.currentContext;
     if (navigatorContext != null && navigatorContext.mounted) {
       navigatorContext.read<NavCubit>().changeScreen(index: 3);
